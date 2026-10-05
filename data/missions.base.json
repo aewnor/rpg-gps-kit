@@ -1,0 +1,798 @@
+{
+ "_doc": "Missions «Coneix el teu poble» (src/systems/missions.lua). Capítols progressius: dins d'un capítol, cada missió es desbloqueja en acabar l'anterior; un capítol s'obre quan se n'han fet `unlock` de l'anterior. cat: nav (orientació, blau), social (família i amics, rosa), safety (seguretat i civisme, verd). Passos: goto {target, radius}, talk {target}, deliver {item, target}, buy {items, at}, crosswalk {count}, light {count}, recycle {count}, bus {count}, meet_olaf {target}. Objectius: area:<nom> (data/streets.json: places, parcs, escoles), street:<nom>, service:<id> (data/services.json), friend:<rol o id> (amics del perfil), home, nearest:recycling | crosswalk | light | bus_stop. {name} i {role} es substitueixen pel personatge del perfil. Les missions de família es creen soles per a cada amic o avi que tingui casa. Fase 6: passos enter {scene} (entrar a una escena), have {item} (tenir un objecte), level {count} (arribar al nivell), defeat {target} (vèncer: boss:dragon), event {event} (avís del món: wallet_started, wallet_returned); a qualsevol pas, give (objecte en acabar-lo), say + who (diàleg en acabar-lo) i inside (prefix d'escena on és l'objectiu). Missions amb min_level; capítols amb after (capítol previ) + unlock. Objectius nous: spot:<nom> (Cova de Roda, Cau del Drac), chest:<nom>, wallet. needs = 'home': només si hi ha casa. Capítols amb parallel=true: totes les missions obertes alhora (família). Plantilles (templates) per personatge amb roles, rank (ordre al diari), min_level i reward_item; pair_templates per parelles de personatges seguits ({name2}, {id2}); chain: cadena principal d'un cap de la colla per amic amb casa (fins a max; fallback = veïns si en falten, min) amb slot/final, {who_target}, {place}, {place_target}, {n}. Marcadors: {name} {id} {role} {parents} {parent1} {parent2}. Passos: deliver/have amb count; objectiu friendhome:<id> (porta de casa del personatge); event home_<id> (entrar a casa seva).",
+ "chapters": [
+  {
+   "id": "familia",
+   "title": "Família i amics",
+   "unlock": 2,
+   "missions": [
+    {
+     "id": "olaf_masieta",
+     "cat": "social",
+     "title": "Queda amb l'Olaf al Parc Roda de Berà",
+     "xp": 40,
+     "coins": 5,
+     "intro": [
+      "L'Olaf ha sortit a passejar tot sol...",
+      "Diu que t'espera al Parc Roda de Berà! Ves-hi a buscar-lo."
+     ],
+     "steps": [
+      {
+       "type": "meet_olaf",
+       "target": "area:Parc Roda de Berà",
+       "text": "Troba l'Olaf al Parc Roda de Berà"
+      }
+     ]
+    }
+   ],
+   "templates": {
+    "visit": {
+     "cat": "social",
+     "title": "Visita {name}",
+     "xp": 35,
+     "coins": 4,
+     "intro": [
+      "{name} t'espera! Saps on viu?"
+     ],
+     "steps": [
+      {
+       "type": "talk",
+       "target": "friend:{id}",
+       "text": "Troba {name} i parla-hi"
+      }
+     ],
+     "rank": 1
+    },
+    "errand": {
+     "cat": "social",
+     "title": "Porta un encàrrec a casa de {name}",
+     "xp": 45,
+     "coins": 6,
+     "roles": [
+      "avi",
+      "avia"
+     ],
+     "intro": [
+      "A casa tens una cistella per a {name}.",
+      "Primer passa per casa a buscar-la!"
+     ],
+     "steps": [
+      {
+       "type": "goto",
+       "target": "home",
+       "radius": 24,
+       "text": "Ves a casa a buscar la cistella",
+       "give": "encarrec"
+      },
+      {
+       "type": "deliver",
+       "item": "encarrec",
+       "target": "friend:{id}",
+       "text": "Porta la cistella a {name}",
+       "done_text": [
+        "Una cistella per a mi? Quina il·lusió! Ets un sol."
+       ]
+      }
+     ],
+     "rank": 2
+    },
+    "joguet": {
+     "rank": 3,
+     "cat": "social",
+     "title": "El peluix de {name}",
+     "xp": 40,
+     "coins": 5,
+     "roles": [
+      "amic",
+      "amiga",
+      "cosi",
+      "cosina"
+     ],
+     "intro": [
+      "{name} ha perdut el seu peluix preferit!",
+      "Diu que se'l va deixar al Parc de Las Navas de Tolosa."
+     ],
+     "steps": [
+      {
+       "type": "talk",
+       "target": "friend:{id}",
+       "text": "Parla amb {name}"
+      },
+      {
+       "type": "goto",
+       "target": "area:Parc de Las Navas de Tolosa",
+       "radius": 44,
+       "text": "Busca el peluix al Parc de Las Navas de Tolosa",
+       "give": "peluix"
+      },
+      {
+       "type": "deliver",
+       "item": "peluix",
+       "target": "friend:{id}",
+       "text": "Torna el peluix a {name}",
+       "done_text": [
+        "El meu peluix! Gràcies, gràcies!",
+        "A casa seva, {parents} t'ho agrairan també."
+       ]
+      }
+     ]
+    },
+    "berenar": {
+     "rank": 3,
+     "cat": "social",
+     "title": "Un berenar per a {name}",
+     "xp": 35,
+     "coins": 3,
+     "roles": [
+      "amic",
+      "amiga",
+      "cosi",
+      "cosina"
+     ],
+     "give_coins": 4,
+     "intro": [
+      "{name} té gana! Li portes una poma?",
+      "Aquí tens 4 monedes: compra-la al Bonpreu o al Lidl (i no te la mengis!)."
+     ],
+     "steps": [
+      {
+       "type": "buy",
+       "items": [
+        "poma"
+       ],
+       "at": [
+        "bonpreu",
+        "lidl",
+        "lidl_platja"
+       ],
+       "text": "Compra una poma al Bonpreu o al Lidl"
+      },
+      {
+       "type": "deliver",
+       "item": "poma",
+       "target": "friend:{id}",
+       "text": "Porta la poma a {name}",
+       "done_text": [
+        "Mmm, una poma cruixent! Gràcies!"
+       ]
+      }
+     ]
+    },
+    "compra_avis": {
+     "rank": 3,
+     "cat": "social",
+     "title": "La compra de {name}",
+     "xp": 45,
+     "coins": 6,
+     "roles": [
+      "avi",
+      "avia"
+     ],
+     "give_coins": 8,
+     "intro": [
+      "{name} no pot sortir avui a comprar.",
+      "Porta-li pa i fruita: aquí tens 8 monedes."
+     ],
+     "steps": [
+      {
+       "type": "buy",
+       "items": [
+        "pa",
+        "poma"
+       ],
+       "at": [
+        "bonpreu",
+        "lidl",
+        "lidl_platja"
+       ],
+       "text": "Compra pa i una poma al Bonpreu o al Lidl",
+       "give": "bossa_compra"
+      },
+      {
+       "type": "deliver",
+       "item": "bossa_compra",
+       "target": "friend:{id}",
+       "text": "Porta la bossa de la compra a {name}",
+       "done_text": [
+        "Quina bona criatura! Ara sí que tinc el dinar.",
+        "{parents} diran que ets un solet."
+       ]
+      }
+     ]
+    },
+    "medicines": {
+     "rank": 3,
+     "cat": "social",
+     "title": "Les medicines de {name}",
+     "xp": 45,
+     "coins": 6,
+     "reward_item": "farmaciola",
+     "roles": [
+      "avi",
+      "avia"
+     ],
+     "intro": [
+      "{name} necessita les seves medicines.",
+      "La la metgessa les té preparades al CAP."
+     ],
+     "steps": [
+      {
+       "type": "talk",
+       "target": "service:metge",
+       "text": "Recull les medicines de {name} al CAP",
+       "give": "medicines"
+      },
+      {
+       "type": "deliver",
+       "item": "medicines",
+       "target": "friend:{id}",
+       "text": "Porta les medicines a {name}",
+       "done_text": [
+        "Gràcies, maco! Em salves el dia.",
+        "Pren, una farmaciola per a tu, per si de cas."
+       ]
+      }
+     ]
+    },
+    "passeig": {
+     "rank": 3,
+     "cat": "social",
+     "title": "Passeja amb {name}",
+     "xp": 40,
+     "coins": 4,
+     "roles": [
+      "avi",
+      "avia"
+     ],
+     "intro": [
+      "{name} vol fer el passeig de cada dia.",
+      "Acompanya-{name} fins a la Plaça de l'Església."
+     ],
+     "steps": [
+      {
+       "type": "talk",
+       "target": "friend:{id}",
+       "text": "Saluda {name}"
+      },
+      {
+       "type": "goto",
+       "target": "area:Plaça de l'Església",
+       "radius": 48,
+       "text": "Acompanya {name} fins a la Plaça de l'Església"
+      },
+      {
+       "type": "talk",
+       "target": "friend:{id}",
+       "text": "Parla de nou amb {name}",
+       "say": [
+        "Quin bon passeig! Amb tu el camí se'm fa curt."
+       ],
+       "who": "{name}"
+      }
+     ]
+    },
+    "paquet": {
+     "rank": 3,
+     "cat": "job",
+     "min_level": 2,
+     "title": "El paquet de {name}",
+     "xp": 50,
+     "coins": 8,
+     "roles": [
+      "tiet",
+      "tieta",
+      "cosi",
+      "cosina"
+     ],
+     "intro": [
+      "A Correus hi ha un paquet esperant {name}.",
+      "La Marta te'l donarà."
+     ],
+     "steps": [
+      {
+       "type": "talk",
+       "target": "service:correus",
+       "text": "Recull el paquet de {name} a Correus",
+       "give": "paquet_familia"
+      },
+      {
+       "type": "deliver",
+       "item": "paquet_familia",
+       "target": "friend:{id}",
+       "text": "Porta el paquet a {name}",
+       "done_text": [
+        "Per fi ha arribat! Moltes gràcies."
+       ]
+      }
+     ]
+    },
+    "foto": {
+     "rank": 3,
+     "cat": "social",
+     "min_level": 2,
+     "title": "Fotos per a {name}",
+     "xp": 45,
+     "coins": 5,
+     "roles": [
+      "tiet",
+      "tieta",
+      "cosi",
+      "cosina",
+      "amic",
+      "amiga"
+     ],
+     "intro": [
+      "{name} vol fotos de dos llocs bonics del poble.",
+      "Passa per la Plaça de l'Església i pel Parc de la Silena."
+     ],
+     "steps": [
+      {
+       "type": "goto",
+       "target": "area:Plaça de l'Església",
+       "radius": 48,
+       "text": "Fes una foto a la Plaça de l'Església"
+      },
+      {
+       "type": "goto",
+       "target": "area:Parc de la Silena",
+       "radius": 48,
+       "text": "Fes una foto al Parc de la Silena"
+      },
+      {
+       "type": "talk",
+       "target": "friend:{id}",
+       "text": "Ensenya les fotos a {name}",
+       "say": [
+        "Que boniques! Ja tinc ganes de veure-ho tot en persona."
+       ],
+       "who": "{name}"
+      }
+     ]
+    },
+    "pares": {
+     "rank": 3,
+     "cat": "social",
+     "title": "Saluda els pares de {name}",
+     "xp": 40,
+     "coins": 5,
+     "reward_item": "farmaciola",
+     "intro": [
+      "{name} viu amb {parents}.",
+      "Passa per casa seva a saludar-los: és de bona educació!"
+     ],
+     "steps": [
+      {
+       "type": "goto",
+       "target": "friendhome:{id}",
+       "radius": 28,
+       "text": "Ves a casa de {name}"
+      },
+      {
+       "type": "event",
+       "event": "home_{id}",
+       "text": "Entra a casa de {name} i saluda {parents}",
+       "say": [
+        "Que bé que ens vingui a veure algú tan educat!",
+        "Pren aquesta farmaciola, per si et fa falta."
+       ],
+       "who": "{parents}"
+      }
+     ]
+    },
+    "aventura_cova": {
+     "rank": 4,
+     "cat": "epic",
+     "min_level": 2,
+     "title": "Aventura a la Pedrera amb {name}",
+     "xp": 70,
+     "coins": 8,
+     "roles": [
+      "amic",
+      "amiga",
+      "cosi",
+      "cosina",
+      "tiet",
+      "tieta"
+     ],
+     "intro": [
+      "{name} vol explorar la Cova de la Pedrera amb tu!",
+      "Diu que hi ha ratpenats... però junts no fa por."
+     ],
+     "steps": [
+      {
+       "type": "talk",
+       "target": "friend:{id}",
+       "text": "Parla amb {name}",
+       "join": "{id}",
+       "say": [
+        "Som-hi! Jo et seguiré i llançaré pedretes als ratpenats.",
+        "I si et fan mal, porto tiretes!"
+       ],
+       "who": "{name}"
+      },
+      {
+       "type": "enter",
+       "scene": "cova_pedrera",
+       "target": "door:door_pedrera_elies",
+       "text": "Entreu a la Cova de la Pedrera"
+      },
+      {
+       "type": "event",
+       "event": "ally_help_3",
+       "inside": "cova_pedrera",
+       "text": "Lluiteu junts: {name} t'ajuda tres cops"
+      },
+      {
+       "type": "goto",
+       "target": "friendhome:{id}",
+       "radius": 40,
+       "text": "Acompanya {name} a casa",
+       "leave": true,
+       "say": [
+        "Quina aventura! Ets molt valent.",
+        "Demà n'expliquem una altra?"
+       ],
+       "who": "{name}"
+      }
+     ]
+    },
+    "tresor_amic": {
+     "rank": 4,
+     "cat": "epic",
+     "min_level": 1,
+     "title": "Caçadors de tresors amb {name}",
+     "xp": 50,
+     "coins": 6,
+     "roles": [
+      "amic",
+      "amiga",
+      "cosi",
+      "cosina",
+      "tiet",
+      "tieta"
+     ],
+     "intro": [
+      "{name} té un nas especial per als tresors amagats.",
+      "Aneu a passejar junts: quan noti un cofre, t'avisarà!"
+     ],
+     "steps": [
+      {
+       "type": "talk",
+       "target": "friend:{id}",
+       "text": "Parla amb {name}",
+       "join": "{id}",
+       "say": [
+        "Un tresor? M'apunto! Camina i jo vigilo."
+       ],
+       "who": "{name}"
+      },
+      {
+       "type": "event",
+       "event": "ally_found",
+       "text": "Passegeu junts: {name} trobarà un tresor"
+      },
+      {
+       "type": "goto",
+       "target": "friendhome:{id}",
+       "radius": 40,
+       "text": "Acompanya {name} a casa",
+       "leave": true,
+       "say": [
+        "Som els millors caçadors de tresors del poble!"
+       ],
+       "who": "{name}"
+      }
+     ]
+    }
+   },
+   "parallel": true,
+   "pair_max": 4,
+   "pair_templates": {
+    "entre_cases": {
+     "rank": 4,
+     "cat": "job",
+     "min_level": 2,
+     "title": "Encàrrec de {name} per a {name2}",
+     "xp": 50,
+     "coins": 6,
+     "intro": [
+      "{name} té una nota per a {name2}.",
+      "Tots dos viuen al poble: ves de casa en casa."
+     ],
+     "steps": [
+      {
+       "type": "talk",
+       "target": "friend:{id}",
+       "text": "Recull la nota de {name}",
+       "give": "nota_amics"
+      },
+      {
+       "type": "deliver",
+       "item": "nota_amics",
+       "target": "friend:{id2}",
+       "text": "Porta la nota a {name2}",
+       "done_text": [
+        "Una nota de {name}! Ara mateix la llegeixo."
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "seguretat",
+   "title": "Seguretat i civisme",
+   "unlock": 2,
+   "missions": [
+    {
+     "id": "passos",
+     "cat": "safety",
+     "title": "Creua pels passos de vianants",
+     "xp": 35,
+     "coins": 5,
+     "intro": [
+      "Per creuar el carrer, sempre pel pas de vianants (la zebra).",
+      "Mira a banda i banda: els cotxes s'aturen si hi ets."
+     ],
+     "steps": [
+      {
+       "type": "crosswalk",
+       "count": 3,
+       "target": "nearest:crosswalk",
+       "text": "Creua 3 carrers pel pas de vianants"
+      }
+     ]
+    },
+    {
+     "id": "semafor",
+     "cat": "safety",
+     "title": "Espera el semàfor verd",
+     "xp": 40,
+     "coins": 6,
+     "intro": [
+      "En alguns passos de vianants dels carrers amb trànsit hi ha semàfors (al joc, inventats).",
+      "Espera que el ninotet es posi verd i aleshores creua."
+     ],
+     "steps": [
+      {
+       "type": "light",
+       "count": 2,
+       "target": "nearest:light",
+       "text": "Creua 2 cops amb el semàfor en verd"
+      }
+     ]
+    },
+    {
+     "id": "reciclar",
+     "cat": "safety",
+     "title": "Recicla als contenidors",
+     "xp": 40,
+     "coins": 5,
+     "intro": [
+      "Cada residu va al seu contenidor:",
+      "groc envasos, blau paper, verd vidre, marró orgànic i gris la resta."
+     ],
+     "steps": [
+      {
+       "type": "recycle",
+       "count": 1,
+       "target": "nearest:recycling",
+       "text": "Separa els residus en uns contenidors"
+      }
+     ]
+    },
+    {
+     "id": "autobus",
+     "cat": "safety",
+     "title": "Agafa l'autobús",
+     "xp": 30,
+     "coins": 4,
+     "intro": [
+      "A les parades de bus pots viatjar per tot el poble.",
+      "Ves a una parada i agafa el bus."
+     ],
+     "steps": [
+      {
+       "type": "bus",
+       "count": 1,
+       "target": "nearest:bus_stop",
+       "text": "Viatja amb l'autobús"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "colla",
+   "title": "Reuneix la colla",
+   "unlock": 6,
+   "after": "poble",
+   "missions": [],
+   "chain": {
+    "id": "colla",
+    "min": 3,
+    "max": 6,
+    "places": [
+     {
+      "text": "el Parc Roda de Berà",
+      "target": "area:Parc Roda de Berà"
+     },
+     {
+      "text": "la Plaça de l'Església",
+      "target": "area:Plaça de l'Església"
+     },
+     {
+      "text": "el Parc de la Silena",
+      "target": "area:Parc de la Silena"
+     },
+     {
+      "text": "l'Escola Salvador Espriu",
+      "target": "area:Escola Salvador Espriu"
+     },
+     {
+      "text": "la Plaça de la Sardana",
+      "target": "area:Plaça de la Sardana"
+     },
+     {
+      "text": "el Parc Mercé Rodoreda",
+      "target": "area:Parc Mercé Rodoreda"
+     }
+    ],
+    "fallback": [
+     {
+      "id": "mestra",
+      "name": "la mestra",
+      "target": "service:escola"
+     },
+     {
+      "id": "metgessa",
+      "name": "la metgessa",
+      "target": "service:metge"
+     },
+     {
+      "id": "agent",
+      "name": "l'agent agent",
+      "target": "service:policia"
+     }
+    ],
+    "slot": {
+     "cat": "epic",
+     "min_level": 2,
+     "title": "La pista de {name}",
+     "xp": 50,
+     "coins": 6,
+     "intro": [
+      "{name} sap on hi ha un tros d'un mapa antic de la muntanya.",
+      "Però abans l'has d'ajudar: ves a {place} i torna."
+     ],
+     "steps": [
+      {
+       "type": "talk",
+       "target": "{who_target}",
+       "text": "Parla amb {name}"
+      },
+      {
+       "type": "goto",
+       "target": "{place_target}",
+       "radius": 48,
+       "text": "Ves a {place}"
+      },
+      {
+       "type": "talk",
+       "target": "{who_target}",
+       "text": "Torna amb {name}",
+       "give": "fragment_mapa",
+       "say": [
+        "Ho sabia! Aquí tens el fragment del mapa.",
+        "Ajunta'ls tots i entre tots trobarem el camí del Drac."
+       ],
+       "who": "{name}"
+      }
+     ]
+    },
+    "final": {
+     "cat": "epic",
+     "min_level": 2,
+     "title": "El mapa de la muntanya",
+     "xp": 120,
+     "coins": 20,
+     "reward_item": "farmaciola",
+     "intro": [
+      "Ja tens els {n} fragments del mapa!",
+      "Porta'ls a l'alcaldessa: ella sabrà com ajuntar-los."
+     ],
+     "steps": [
+      {
+       "type": "deliver",
+       "item": "fragment_mapa",
+       "target": "service:ajuntament",
+       "text": "Porta els fragments a l'alcaldessa",
+       "give": "mapa_muntanya",
+       "done_text": [
+        "Els fragments encaixen! És un mapa de la muntanya de Roda.",
+        "Marca el camí de la cova i del cim. Això ho hem aconseguit entre tots!"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "taller",
+   "title": "El taller",
+   "unlock": 0,
+   "missions": [
+    {
+     "id": "taller_primer",
+     "cat": "epic",
+     "title": "El primer invent",
+     "xp": 60,
+     "coins": 6,
+     "intro": [
+      "Amb l'espasa pots treure fusta dels arbres, fibra dels matolls i pedra de les roques.",
+      "I els llops i els senglars deixen pell i cuir. Amb tot això, al banc de taller de casa pots crear coses!"
+     ],
+     "steps": [
+      {
+       "type": "event",
+       "event": "wood_3",
+       "text": "Talla fusta de 3 arbres amb l'espasa"
+      },
+      {
+       "type": "event",
+       "event": "crafted",
+       "target": "home",
+       "text": "Crea un objecte al banc de taller de casa",
+       "say": [
+        "Ho has fet tu sol! Quin artesà més manetes.",
+        "Si vols més coses, busca materials pel poble i la muntanya."
+       ],
+       "who": "Missió"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "granja",
+   "title": "Les granges",
+   "unlock": 0,
+   "missions": [
+    {
+     "id": "granja_dia",
+     "cat": "social",
+     "title": "Un dia a la granja",
+     "xp": 60,
+     "coins": 6,
+     "intro": [
+      "Al sud de l'autopista hi ha granges amb rucs, cavalls, porcs, ovelles i gallines.",
+      "El pagès de la Granja del Ruc necessita ajuda per donar de menjar als animals!"
+     ],
+     "steps": [
+      {
+       "type": "event",
+       "event": "farm_pinso",
+       "target": "spot:granja_1",
+       "text": "Ves a la granja i parla amb el pagès"
+      },
+      {
+       "type": "event",
+       "event": "animals_3",
+       "text": "Dona pinso a tres animals diferents"
+      },
+      {
+       "type": "event",
+       "event": "egg",
+       "text": "Dona menjar a les gallines: potser ponen un ou!",
+       "say": [
+        "Un ou acabat de pondre! Les gallines estan contentes.",
+        "Torna quan vulguis: els animals sempre tenen gana."
+       ],
+       "who": "El pagès"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,27 @@
+{
+ "_doc": "Pronúncia per a la veu (src/tts.lua): paraula del text → com s'ha d'escriure perquè la veu la digui bé. Només afecta l'àudio, mai el text de la pantalla. ca = veu catalana, es = veu castellana. Es compara per paraula sencera (majúscules incloses).",
+ "ca": {
+  "Olaf": "Òlaf",
+  "Dra.": "Doctora",
+  "Nv": "Nivell",
+  "XP": "punts d'experiència",
+  "HP": "punts de vida",
+  "MP": "punts de màgia",
+  "CAP": "cap",
+  "km": "quilòmetres",
+  "N-340": "ena tres-cents quaranta",
+  "TV-2041": "te ve vint quaranta-u"
+ },
+ "es": {
+  "Olaf": "Ólaf",
+  "Dra.": "Doctora",
+  "Nv": "Nivel",
+  "XP": "puntos de experiencia",
+  "HP": "puntos de vida",
+  "MP": "puntos de magia",
+  "CAP": "cap",
+  "km": "kilómetros",
+  "N-340": "ene trescientos cuarenta",
+  "TV-2041": "te uve veinte cuarenta y uno"
+ }
+}

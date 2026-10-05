@@ -1,0 +1,100 @@
+{
+  "characters": {
+    "npc_archaeologist": {
+      "_hair": "bob",
+      "_outfit": "pants",
+      "_hat": "ranger",
+      "_extra": [
+        "bag"
+      ],
+      "w": "sand",
+      "W": "ochre2",
+      "b": "terra3"
+    },
+    "npc_gardener": {
+      "_hair": "bun",
+      "_outfit": "pants",
+      "_hat": "ranger",
+      "_extra": [
+        "apron"
+      ],
+      "w": "pine",
+      "W": "pine3",
+      "b": "ochre3"
+    },
+    "npc_smith": {
+      "_hair": "short",
+      "_outfit": "pants",
+      "_extra": [
+        "apron",
+        "beard"
+      ],
+      "w": "terra",
+      "W": "terra3",
+      "b": "asph3"
+    },
+    "npc_sailor": {
+      "_hair": "short",
+      "_outfit": "sweater",
+      "_hat": "beanie",
+      "_extra": [
+        "scarf"
+      ],
+      "w": "white",
+      "W": "sea",
+      "b": "blue"
+    },
+    "npc_musician": {
+      "_hair": "long",
+      "_outfit": "dress",
+      "_extra": [
+        "bag"
+      ],
+      "w": "blue",
+      "W": "sea3",
+      "b": "blue"
+    },
+    "npc_librarian": {
+      "_hair": "bun",
+      "_outfit": "sweater",
+      "_extra": [
+        "glasses",
+        "bag"
+      ],
+      "w": "ochre",
+      "W": "ochre3",
+      "b": "pine3"
+    },
+    "npc_miner": {
+      "_hair": "bald",
+      "_outfit": "uniform",
+      "_hat": "cap",
+      "_extra": [
+        "belt"
+      ],
+      "w": "stone",
+      "W": "stone3",
+      "b": "asph3",
+      "c": "ochre"
+    },
+    "npc_cook": {
+      "_hair": "short",
+      "_outfit": "uniform",
+      "_hat": "chef",
+      "_extra": [
+        "apron"
+      ],
+      "w": "white",
+      "W": "white2",
+      "b": "terra3"
+    }
+  },
+  "props": [
+    "barrel",
+    "crate",
+    "flowers",
+    "amphora",
+    "lantern",
+    "mushrooms"
+  ]
+}

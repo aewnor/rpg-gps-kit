@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuración del juego</title>
+<style>
+:root {
+  --bg: #16141a; --panel: #211e27; --panel2: #2b2733; --line: #3a3544; --text: #ece6da;
+  --muted: #a59da9; --accent: #e6bd6b; --accent2: #55c6c3; --danger: #e26d5c; --ok: #7cc47c;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+button, select, input { font: inherit; color: var(--text); background: var(--panel2);
+  border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+button { cursor: pointer; }
+button:hover:not(:disabled) { border-color: var(--accent); }
+button:disabled { opacity: .5; cursor: default; }
+button.primary { background: var(--accent2); color: #10232a; border-color: var(--accent2); font-weight: 600; }
+input:focus, select:focus, button:focus-visible { outline: 2px solid var(--accent2); outline-offset: -1px; }
+header { position: sticky; top: 0; display: flex; align-items: center; gap: 8px; padding: 8px 14px;
+  background: var(--panel); border-bottom: 1px solid var(--line); flex-wrap: wrap; z-index: 2; }
+header h1 { font-size: 21px; line-height: 1.2; margin: 0 8px 0 0; }
+header a { text-decoration: none; }
+.sp { flex: 1; }
+#status { color: var(--muted); font-size: 13px; }
+#status.err { color: var(--danger); }
+#status.ok { color: var(--ok); }
+main { max-width: 760px; margin: 0 auto; padding: 16px 16px 60px; }
+section { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+.row { display: flex; align-items: center; gap: 10px; margin: 8px 0; flex-wrap: wrap; }
+.row > label:first-child { min-width: 150px; }
+.hint { color: var(--muted); font-size: 13px; margin: 4px 0; }
+input[type=range] { flex: 1; min-width: 160px; padding: 0; accent-color: var(--accent2); }
+.seg button.on { background: var(--accent); color: #1f1a24; border-color: var(--accent); font-weight: 600; }
+#locals { max-height: 55vh; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px; margin-top: 8px; }
+#locals label { display: flex; gap: 10px; align-items: center; padding: 7px 10px; border-bottom: 1px solid var(--line); min-height: 40px; }
+#locals label:last-child { border-bottom: 0; }
+#locals .kind { color: var(--muted); font-size: 12px; margin-left: auto; }
+#locals .ver { color: var(--ok); font-size: 12px; }
+#locals input[type=checkbox] { width: 20px; height: 20px; }
+#filter { flex: 1; min-width: 180px; }
+code { background: var(--panel2); padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>⚙️ Configuración del juego</h1>
+  <span class="sp"></span>
+  <span id="status">Cargando…</span>
+  <button id="btnSave" class="primary" disabled>💾 Guardar</button>
+  <a href="index.html"><button>🗺️ Editor</button></a>
+  <a href="/" target="_blank"><button>🎮 Juego</button></a>
+</header>
+<main>
+  <p class="hint">Se guarda en el servidor (<code>config/joc.json</code>), no en el navegador: lo que cambies aquí desde el PC lo verá el juego en el móvil la próxima vez que lo abra.</p>
+
+  <section>
+    <h2>Sonido</h2>
+    <div class="row"><label>Voz de los personajes</label>
+      <span class="seg" id="veu">
+        <button data-v="auto">Automático</button><button data-v="si">Sí</button><button data-v="no">No</button>
+      </span></div>
+    <p class="hint">«Automático» respeta lo que haya elegido cada dispositivo en su menú.</p>
+    <div class="row"><label for="volum">Volumen efectos</label><input id="volum" type="range" min="0" max="1" step="0.05"><span id="volumV"></span></div>
+    <div class="row"><label for="volum_musica">Volumen música</label><input id="volum_musica" type="range" min="0" max="1" step="0.05"><span id="volum_musicaV"></span></div>
+  </section>
+
+  <section>
+    <h2>Tiempo</h2>
+    <div class="row"><label for="temps">Tiempo en el pueblo</label><select id="temps"></select></div>
+    <p class="hint">«Automático» cambia solo con los días; el resto fija el tiempo para todas las partidas.</p>
+  </section>
+
+  <section>
+    <h2>Comercios</h2>
+    <div class="row"><label><input type="checkbox" id="tots"> Mostrar todos los comercios del directorio</label></div>
+    <p class="hint">Por defecto solo salen los comercios comprobados (✓). Marca otros para que también aparezcan con su rótulo y se pueda entrar.</p>
+    <div class="row"><input id="filter" type="search" placeholder="Buscar comercio…"><span id="count" class="hint"></span></div>
+    <div id="locals"></div>
+  </section>
+</main>
+<script src="/adult.js"></script>
+<script>
+'use strict';
+const TEMPS_ES = { auto: 'Automático', sol: 'Sol', nuvol: 'Nublado', pluja: 'Lluvia', tempesta: 'Tormenta', neu: 'Nieve', boira: 'Niebla', vent: 'Viento' };
+const S = { config: null, locals: [], dirty: false };
+const $ = (id) => document.getElementById(id);
+
+function setStatus(msg, cls) { const s = $('status'); s.textContent = msg; s.className = cls || ''; }
+
+async function api(method, body) {
+  const headers = { 'X-Roda-Request': '1' };
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  const send = () => fetch('/api/config', { method, headers, body: body !== undefined ? JSON.stringify(body) : undefined,
+    signal: AbortSignal.timeout(15000) });
+  let r = await send();
+  if (r.status === 401 && await window.RodaAdult.ensure()) r = await send();
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'No se puede completar la petición');
+  return j;
+}
+
+function dirty() { S.dirty = true; $('btnSave').disabled = false; setStatus('Cambios sin guardar'); }
+
+function renderVeu() {
+  const v = S.config.veu === true ? 'si' : S.config.veu === false ? 'no' : 'auto';
+  for (const b of $('veu').children) b.classList.toggle('on', b.dataset.v === v);
+}
+
+function renderLocals() {
+  const q = $('filter').value.trim().toLowerCase();
+  const extra = new Set(S.config.locals_verificats || []);
+  const all = S.config.mostrar_tots_els_locals;
+  const box = $('locals'); box.textContent = '';
+  let shown = 0, visible = 0;
+  for (const l of S.locals) {
+    const on = l.verified || all || extra.has(l.id);
+    if (on) visible++;
+    if (q && !(l.name.toLowerCase().includes(q) || l.kind.includes(q))) continue;
+    shown++;
+    const lab = document.createElement('label');
+    const cb = document.createElement('input'); cb.type = 'checkbox';
+    cb.checked = on; cb.disabled = l.verified || all;
+    cb.addEventListener('change', () => {
+      const set = new Set(S.config.locals_verificats || []);
+      cb.checked ? set.add(l.id) : set.delete(l.id);
+      S.config.locals_verificats = [...set].sort();
+      dirty(); renderCount();
+    });
+    const name = document.createElement('span'); name.textContent = l.name;
+    lab.append(cb, name);
+    if (l.verified) { const v = document.createElement('span'); v.className = 'ver'; v.textContent = '✓ comprobado'; lab.append(v); }
+    const k = document.createElement('span'); k.className = 'kind'; k.textContent = l.kind; lab.append(k);
+    box.append(lab);
+  }
+  renderCount(shown);
+}
+function renderCount(shown) {
+  const extra = new Set(S.config.locals_verificats || []);
+  const vis = S.locals.filter((l) => l.verified || S.config.mostrar_tots_els_locals || extra.has(l.id)).length;
+  $('count').textContent = `${vis} de ${S.locals.length} visibles en el juego`;
+}
+
+function render() {
+  renderVeu();
+  for (const k of ['volum', 'volum_musica']) { $(k).value = S.config[k]; $(k + 'V').textContent = Math.round(S.config[k] * 100) + ' %'; }
+  $('temps').value = S.config.temps;
+  $('tots').checked = !!S.config.mostrar_tots_els_locals;
+  renderLocals();
+}
+
+async function load() {
+  try {
+    const j = await api('GET');
+    S.config = j.config; S.locals = j.locals || [];
+    $('temps').textContent = '';
+    for (const t of j.temps || ['auto']) { const o = document.createElement('option'); o.value = t; o.textContent = TEMPS_ES[t] || t; $('temps').append(o); }
+    render();
+    setStatus('Configuración cargada');
+  } catch (e) { setStatus(e.message, 'err'); }
+}
+
+async function save() {
+  $('btnSave').disabled = true; setStatus('Guardando…');
+  try {
+    const c = S.config;
+    const j = await api('PUT', { veu: c.veu, volum: +c.volum, volum_musica: +c.volum_musica, temps: c.temps,
+      mostrar_tots_els_locals: !!c.mostrar_tots_els_locals, locals_verificats: c.locals_verificats || [] });
+    S.config = j.config || c; S.dirty = false; render();
+    setStatus('Guardado ✓ (el móvil lo verá al abrir el juego)', 'ok');
+  } catch (e) { $('btnSave').disabled = false; setStatus(e.message, 'err'); }
+}
+
+$('veu').addEventListener('click', (e) => {
+  const v = e.target.dataset && e.target.dataset.v; if (!v) return;
+  S.config.veu = v === 'si' ? true : v === 'no' ? false : null; renderVeu(); dirty();
+});
+for (const k of ['volum', 'volum_musica']) $(k).addEventListener('input', () => {
+  S.config[k] = +$(k).value; $(k + 'V').textContent = Math.round(S.config[k] * 100) + ' %'; dirty();
+});
+$('temps').addEventListener('change', () => { S.config.temps = $('temps').value; dirty(); });
+$('tots').addEventListener('change', () => { S.config.mostrar_tots_els_locals = $('tots').checked; renderLocals(); dirty(); });
+$('filter').addEventListener('input', renderLocals);
+$('btnSave').addEventListener('click', save);
+window.addEventListener('beforeunload', (e) => { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+ "overworld": {
+  "map": "maps/runtime/overworld",
+  "music": "overworld",
+  "outdoor": true,
+  "traffic": true
+ },
+ "cova_pedrera": {
+  "map": "maps/runtime/cova_pedrera",
+  "music": "cave",
+  "outdoor": false,
+  "dark": true,
+  "fictional": true
+ },
+ "torre_cucurull": {
+  "map": "maps/runtime/torre_cucurull",
+  "music": "cave",
+  "outdoor": false,
+  "dark": true,
+  "fictional": true
+ },
+ "masmorra_castell": {
+  "map": "maps/runtime/masmorra_castell",
+  "music": "cave",
+  "outdoor": false,
+  "dark": true,
+  "fictional": true
+ },
+ "cova_roda_1": {
+  "map": "maps/runtime/cova_roda_1",
+  "music": "cave",
+  "outdoor": false,
+  "dark": true,
+  "fictional": true,
+  "name": "Cova de Roda · la galeria",
+  "depth": 1
+ },
+ "cova_roda_2": {
+  "map": "maps/runtime/cova_roda_2",
+  "music": "cave",
+  "outdoor": false,
+  "dark": true,
+  "fictional": true,
+  "name": "Cova de Roda · la sala fonda",
+  "depth": 2
+ },
+ "cova_roda_3": {
+  "map": "maps/runtime/cova_roda_3",
+  "music": "cave",
+  "outdoor": false,
+  "dark": true,
+  "fictional": true,
+  "name": "Cova de Roda · el cor de la muntanya",
+  "depth": 3
+ },
+ "cau_drac": {
+  "map": "maps/runtime/cau_drac",
+  "music": "cave",
+  "outdoor": false,
+  "dark": true,
+  "fictional": true,
+  "name": "Cau del Drac",
+  "boss": true
+ }
+}

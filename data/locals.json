@@ -1,0 +1,1069 @@
+{
+ "_doc": "Generat per tools/make_locals.py des de l'OSM del lloc. No editar a mà.",
+ "locals": [
+  {
+   "id": "bar_la_violeta",
+   "name": "Bar la Violeta",
+   "kind": "restaurant",
+   "tile": [
+    251,
+    354
+   ],
+   "sign": "BAR LA VIOLETA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "nadapedaleacorre_com",
+   "name": "nadapedaleacorre.com",
+   "kind": "sport",
+   "tile": [
+    135,
+    278
+   ],
+   "sign": "NADAPEDALEACORRE",
+   "bg": "blue",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "bar_ca_la_mari",
+   "name": "Bar Ca la Mari",
+   "kind": "restaurant",
+   "tile": [
+    289,
+    507
+   ],
+   "sign": "BAR CA LA MARI",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_taberna_del_mar",
+   "name": "La Taberna del Mar",
+   "kind": "restaurant",
+   "tile": [
+    287,
+    508
+   ],
+   "sign": "TABERNA MAR",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_tortosina",
+   "name": "La Tortosina",
+   "kind": "restaurant",
+   "tile": [
+    283,
+    508
+   ],
+   "sign": "LA TORTOSINA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "restaurant_park",
+   "name": "Restaurant Park",
+   "kind": "restaurant",
+   "tile": [
+    279,
+    516
+   ],
+   "sign": "RESTAURANT PARK",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "farmacia_sabate_herrero_joaquim",
+   "name": "Farmàcia Sabaté Herrero, Joaquim",
+   "kind": "pharmacy",
+   "tile": [
+    311,
+    508
+   ],
+   "sign": "FARMACIA SABATE",
+   "bg": "pine3",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "revistes_i_diaris",
+   "name": "Revistes i diaris",
+   "kind": "shop",
+   "tile": [
+    316,
+    498
+   ],
+   "sign": "REVISTES DIARIS",
+   "bg": "white",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "viavins",
+   "name": "Viavins",
+   "kind": "shop",
+   "tile": [
+    299,
+    499
+   ],
+   "sign": "VIAVINS",
+   "bg": "white",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "farmacia_domingo_navarro_susana",
+   "name": "Farmàcia Domingo Navarro, Susana",
+   "kind": "pharmacy",
+   "tile": [
+    213,
+    341
+   ],
+   "sign": "FARMACIA DOMINGO",
+   "bg": "pine3",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "hotel_gran_claustre",
+   "name": "Hotel Gran Claustre",
+   "kind": "stay",
+   "tile": [
+    254,
+    306
+   ],
+   "sign": "HOTEL GRAN",
+   "bg": "sea3",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "drim",
+   "name": "Drim",
+   "kind": "shop",
+   "tile": [
+    69,
+    354
+   ],
+   "sign": "DRIM",
+   "bg": "white",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "alta_burg",
+   "name": "Alta Burg",
+   "kind": "takeaway",
+   "tile": [
+    289,
+    519
+   ],
+   "sign": "ALTA BURG",
+   "bg": "ochre2",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "els_vents",
+   "name": "Els vents",
+   "kind": "super",
+   "tile": [
+    319,
+    503
+   ],
+   "sign": "ELS VENTS",
+   "bg": "red",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "llebeig",
+   "name": "Llebeig",
+   "kind": "restaurant",
+   "tile": [
+    305,
+    507
+   ],
+   "sign": "LLEBEIG",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "via_augusta",
+   "name": "Via Augusta",
+   "kind": "restaurant",
+   "tile": [
+    400,
+    429
+   ],
+   "sign": "VIA AUGUSTA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_mar_de_tapes",
+   "name": "La mar de tapes",
+   "kind": "restaurant",
+   "tile": [
+    313,
+    531
+   ],
+   "sign": "LA MAR DE TAPES",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_torreta",
+   "name": "La Torreta",
+   "kind": "restaurant",
+   "tile": [
+    352,
+    517
+   ],
+   "sign": "LA TORRETA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "k_toka",
+   "name": "K-TOKA",
+   "kind": "restaurant",
+   "tile": [
+    217,
+    383
+   ],
+   "sign": "K-TOKA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "jijonenca",
+   "name": "Jijonenca",
+   "kind": "icecream",
+   "tile": [
+    301,
+    499
+   ],
+   "sign": "JIJONENCA",
+   "bg": "blush",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "el_sitio",
+   "name": "El Sitio",
+   "kind": "restaurant",
+   "tile": [
+    349,
+    525
+   ],
+   "sign": "EL SITIO",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_volta",
+   "name": "La volta",
+   "kind": "restaurant",
+   "tile": [
+    277,
+    503
+   ],
+   "sign": "LA VOLTA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "polini",
+   "name": "Polini",
+   "kind": "restaurant",
+   "tile": [
+    345,
+    526
+   ],
+   "sign": "POLINI",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "pizzeria",
+   "name": "Pizzería",
+   "kind": "takeaway",
+   "tile": [
+    342,
+    502
+   ],
+   "sign": "PIZZERIA",
+   "bg": "ochre2",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "forn_marti",
+   "name": "Forn Marti",
+   "kind": "bakery",
+   "tile": [
+    336,
+    501
+   ],
+   "sign": "FORN MARTI",
+   "bg": "ochre",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "gori",
+   "name": "Gori",
+   "kind": "restaurant",
+   "tile": [
+    348,
+    504
+   ],
+   "sign": "GORI",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "gori_5789",
+   "name": "Gori",
+   "kind": "super",
+   "tile": [
+    345,
+    503
+   ],
+   "sign": "GORI",
+   "bg": "red",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "el_chiringito",
+   "name": "el chiringito",
+   "kind": "restaurant",
+   "tile": [
+    217,
+    556
+   ],
+   "sign": "EL CHIRINGITO",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_bella_vita",
+   "name": "La Bella Vita",
+   "kind": "restaurant",
+   "tile": [
+    304,
+    503
+   ],
+   "sign": "LA BELLA VITA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "club_maritim_de_altafulla",
+   "name": "Club Maritim de Altafulla",
+   "kind": "restaurant",
+   "tile": [
+    223,
+    545
+   ],
+   "sign": "CLUB MARITIM",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "kebab",
+   "name": "Kebab",
+   "kind": "takeaway",
+   "tile": [
+    319,
+    516
+   ],
+   "sign": "KEBAB",
+   "bg": "ochre2",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_chunga",
+   "name": "La chunga",
+   "kind": "restaurant",
+   "tile": [
+    252,
+    409
+   ],
+   "sign": "LA CHUNGA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "bar_leo",
+   "name": "Bar Leo",
+   "kind": "restaurant",
+   "tile": [
+    290,
+    530
+   ],
+   "sign": "BAR LEO",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "faristol",
+   "name": "Faristol",
+   "kind": "restaurant",
+   "tile": [
+    286,
+    312
+   ],
+   "sign": "FARISTOL",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "voramar_cal_vitali",
+   "name": "Voramar Cal Vitali",
+   "kind": "restaurant",
+   "tile": [
+    442,
+    516
+   ],
+   "sign": "VORAMAR CAL",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "granja_sant_francesc",
+   "name": "Granja Sant Francesc",
+   "kind": "restaurant",
+   "tile": [
+    256,
+    374
+   ],
+   "sign": "GRANJA SANT",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "piscina_municipal",
+   "name": "Piscina municipal",
+   "kind": "sport",
+   "tile": [
+    216,
+    387
+   ],
+   "sign": "PISCINA",
+   "bg": "blue",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "heladeria",
+   "name": "Heladería",
+   "kind": "restaurant",
+   "tile": [
+    311,
+    532
+   ],
+   "sign": "HELADERIA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "heladeria_6791",
+   "name": "Heladería",
+   "kind": "restaurant",
+   "tile": [
+    319,
+    499
+   ],
+   "sign": "HELADERIA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "suko",
+   "name": "Suko",
+   "kind": "restaurant",
+   "tile": [
+    287,
+    496
+   ],
+   "sign": "SUKO",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "altafulla_mar",
+   "name": "Altafulla Mar",
+   "kind": "stay",
+   "tile": [
+    294,
+    494
+   ],
+   "sign": "ALTAFULLA MAR",
+   "bg": "sea3",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "lestanc_daltafulla",
+   "name": "l’estanc d’altafulla",
+   "kind": "shop",
+   "tile": [
+    239,
+    346
+   ],
+   "sign": "LESTANC",
+   "bg": "white",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "clinica_veterinaria_animalia_altaful",
+   "name": "Clínica Veterinária Animalia Altafulla",
+   "kind": "animals",
+   "tile": [
+    318,
+    517
+   ],
+   "sign": "CLINICA",
+   "bg": "pine",
+   "fg": "ink",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "bodega_altafulla",
+   "name": "Bodega Altafulla",
+   "kind": "trade",
+   "tile": [
+    263,
+    365
+   ],
+   "sign": "BODEGA ALTAFULLA",
+   "bg": "stone2",
+   "fg": "ink",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "trescomatres_multimedia_sl",
+   "name": "Trescomatres Multimèdia SL",
+   "kind": "shop",
+   "tile": [
+    260,
+    362
+   ],
+   "sign": "TRESCOMATRES",
+   "bg": "white",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "el_tiberi",
+   "name": "El Tiberi",
+   "kind": "restaurant",
+   "tile": [
+    340,
+    488
+   ],
+   "sign": "EL TIBERI",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "restaurant_suko",
+   "name": "Restaurant Suko",
+   "kind": "restaurant",
+   "tile": [
+    286,
+    492
+   ],
+   "sign": "RESTAURANT SUKO",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "veritas",
+   "name": "Veritas",
+   "kind": "super",
+   "tile": [
+    56,
+    350
+   ],
+   "sign": "VERITAS",
+   "bg": "red",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "bonarea",
+   "name": "BonÀrea",
+   "kind": "super",
+   "tile": [
+    75,
+    355
+   ],
+   "sign": "BONAREA",
+   "bg": "red",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "mi_garden",
+   "name": "Mi Garden",
+   "kind": "garden",
+   "tile": [
+    72,
+    354
+   ],
+   "sign": "MI GARDEN",
+   "bg": "pine2",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "mi_bazar",
+   "name": "Mi Bazar",
+   "kind": "shop",
+   "tile": [
+    61,
+    350
+   ],
+   "sign": "MI BAZAR",
+   "bg": "white",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_sirena",
+   "name": "La Sirena",
+   "kind": "shop",
+   "tile": [
+    78,
+    353
+   ],
+   "sign": "LA SIRENA",
+   "bg": "white",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "vesta",
+   "name": "Vesta",
+   "kind": "office",
+   "tile": [
+    82,
+    353
+   ],
+   "sign": "VESTA",
+   "bg": "white2",
+   "fg": "asph3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "centre_d_entitats",
+   "name": "Centre d'entitats",
+   "kind": "office",
+   "tile": [
+    267,
+    264
+   ],
+   "sign": "D'ENTITATS",
+   "bg": "white2",
+   "fg": "asph3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "punt_d_informacio_juvenil",
+   "name": "Punt d'informació juvenil",
+   "kind": "office",
+   "tile": [
+    213,
+    313
+   ],
+   "sign": "PUNT",
+   "bg": "white2",
+   "fg": "asph3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "consultori_medic",
+   "name": "Consultori Mèdic",
+   "kind": "health",
+   "tile": [
+    226,
+    325
+   ],
+   "sign": "CONSULTORI MEDIC",
+   "bg": "white",
+   "fg": "pine3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "caravanes_altafulla",
+   "name": "Caravanes Altafulla",
+   "kind": "garage",
+   "tile": [
+    82,
+    326
+   ],
+   "sign": "CARAVANES",
+   "bg": "stone3",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "caixabank",
+   "name": "Caixabank",
+   "kind": "bank",
+   "tile": [
+    235,
+    345
+   ],
+   "sign": "CAIXABANK",
+   "bg": "blue",
+   "fg": "sun",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "bar_la_placa1",
+   "name": "Bar La Plaça1",
+   "kind": "restaurant",
+   "tile": [
+    284,
+    335
+   ],
+   "sign": "BAR LA PLACA1",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "gelats_de_la_rosita",
+   "name": "Gelats de la Rosita",
+   "kind": "icecream",
+   "tile": [
+    337,
+    501
+   ],
+   "sign": "GELATS ROSITA",
+   "bg": "blush",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "may_beach",
+   "name": "May Beach",
+   "kind": "stay",
+   "tile": [
+    350,
+    515
+   ],
+   "sign": "MAY BEACH",
+   "bg": "sea3",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "supercor",
+   "name": "Supercor",
+   "kind": "super",
+   "tile": [
+    48,
+    375
+   ],
+   "sign": "SUPERCOR",
+   "bg": "red",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_lleona_salada",
+   "name": "La Lleona Salada",
+   "kind": "restaurant",
+   "tile": [
+    261,
+    321
+   ],
+   "sign": "LA LLEONA SALADA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "la_tortosina_3301",
+   "name": "La Tortosina",
+   "kind": "restaurant",
+   "tile": [
+    281,
+    507
+   ],
+   "sign": "LA TORTOSINA",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "llibreria_bruna",
+   "name": "Llibreria Bruna",
+   "kind": "shop",
+   "tile": [
+    280,
+    301
+   ],
+   "sign": "LLIBRERIA BRUNA",
+   "bg": "white",
+   "fg": "terra3",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "castellers_d_altafulla",
+   "name": "Castellers d'Altafulla",
+   "kind": "sport",
+   "tile": [
+    232,
+    272
+   ],
+   "sign": "CASTELLERS",
+   "bg": "blue",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "camping_don_quijote",
+   "name": "Càmping Don Quijote",
+   "kind": "stay",
+   "tile": [
+    460,
+    424
+   ],
+   "sign": "CAMPING DON",
+   "bg": "sea3",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "caprabo",
+   "name": "Caprabo",
+   "kind": "super",
+   "tile": [
+    36,
+    345
+   ],
+   "sign": "CAPRABO",
+   "bg": "red",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "karting_altafulla",
+   "name": "Kàrting Altafulla",
+   "kind": "sport",
+   "tile": [
+    432,
+    363
+   ],
+   "sign": "KARTING",
+   "bg": "blue",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "el_buffet_d_altafulla",
+   "name": "El Buffet d'Altafulla",
+   "kind": "restaurant",
+   "tile": [
+    64,
+    382
+   ],
+   "sign": "BUFFET",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "camping_santa_eulalia",
+   "name": "Càmping Santa Eulàlia",
+   "kind": "stay",
+   "tile": [
+    379,
+    401
+   ],
+   "sign": "CAMPING SANTA",
+   "bg": "sea3",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "garden_la_rasa",
+   "name": "Garden La Rasa",
+   "kind": "garden",
+   "tile": [
+    548,
+    285
+   ],
+   "sign": "GARDEN LA RASA",
+   "bg": "pine2",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "mercadona",
+   "name": "Mercadona",
+   "kind": "super",
+   "tile": [
+    8,
+    311
+   ],
+   "sign": "MERCADONA",
+   "bg": "red",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "voramar_cal_vitali_7537",
+   "name": "Voramar Cal Vitali",
+   "kind": "restaurant",
+   "tile": [
+    440,
+    516
+   ],
+   "sign": "VORAMAR CAL",
+   "bg": "terra3",
+   "fg": "sand",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "hotel_yola",
+   "name": "Hotel Yola",
+   "kind": "stay",
+   "tile": [
+    337,
+    490
+   ],
+   "sign": "HOTEL YOLA",
+   "bg": "sea3",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  },
+  {
+   "id": "pavello_poliesportiu",
+   "name": "Pavelló poliesportiu",
+   "kind": "sport",
+   "tile": [
+    298,
+    163
+   ],
+   "sign": "PAVELLO",
+   "bg": "blue",
+   "fg": "white",
+   "verified": true,
+   "source": "osm"
+  }
+ ]
+}

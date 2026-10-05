@@ -1,0 +1,15 @@
+{
+ "_doc": "Retocs de la importació (tools/import_osm.py)",
+ "connections": [],
+ "landmark_offsets": {},
+ "ramps_add": [],
+ "ramps_remove": [],
+ "level_overrides": {},
+ "level_overrides_reason": {},
+ "buildings_clear": [],
+ "buildings_add": [],
+ "extra_features": [],
+ "parking_pedestrian": {},
+ "construction_sites": [],
+ "fountains": []
+}

@@ -1,0 +1,133 @@
+{
+ "_doc": "Aspectos del protagonista. colors: letras de tools/chars.py (h/H pelo, s/S piel, w/W ropa, b pantalón o falda, o zapatos, r boca, e ojos) → color de la paleta (tools/pixel.py). hat: nena | witch | pirate | santa | pumpkin | cap (también fija pelo y ropa). hair: short | bob | long | pigtails | bun | bald | spiky. outfit: shorts | pants | dress | sweater | uniform. extra: apron, bag, cane, beard, glasses, scarf, belt, ribs. theme: temporada en la que se sugiere. tools/make_sprites.py genera player_<id>.png, player_<id>_action.png y player_<id>_bike.png.",
+ "skins": [
+  {
+   "id": "nena",
+   "name": "Nena",
+   "colors": {
+    "h": "ochre3",
+    "H": "terra3",
+    "w": "sea",
+    "W": "sea2",
+    "b": "sea",
+    "o": "terra3"
+   },
+   "hat": "nena"
+  },
+  {
+   "id": "default",
+   "name": "Clàssic",
+   "colors": {
+    "h": "ochre3",
+    "H": "terra3",
+    "w": "white",
+    "W": "white2",
+    "b": "blue"
+   },
+   "hair": "short",
+   "outfit": "shorts"
+  },
+  {
+   "id": "esportiu",
+   "name": "Esportiu",
+   "colors": {
+    "h": "ink",
+    "H": "asph3",
+    "w": "red",
+    "W": "terra2",
+    "b": "asph3"
+   },
+   "hat": "cap",
+   "outfit": "shorts"
+  },
+  {
+   "id": "mariner",
+   "name": "Mariner",
+   "colors": {
+    "h": "ochre2",
+    "H": "ochre3",
+    "w": "blue",
+    "W": "sea3",
+    "b": "white2"
+   },
+   "hair": "short",
+   "outfit": "sweater",
+   "extra": [
+    "scarf"
+   ]
+  },
+  {
+   "id": "pirata",
+   "name": "Pirata",
+   "colors": {
+    "h": "ink",
+    "H": "asph3",
+    "w": "white",
+    "W": "red",
+    "b": "asph3"
+   },
+   "hat": "pirate"
+  },
+  {
+   "id": "bruixa",
+   "name": "Bruixa (Halloween)",
+   "colors": {
+    "h": "terra2",
+    "H": "terra3",
+    "w": "asph3",
+    "W": "ink",
+    "b": "asph2"
+   },
+   "hat": "witch",
+   "theme": "halloween"
+  },
+  {
+   "id": "esquelet",
+   "name": "Esquelet (Halloween)",
+   "colors": {
+    "h": "white",
+    "H": "white2",
+    "s": "white2",
+    "S": "white3",
+    "w": "ink",
+    "W": "asph3",
+    "b": "ink",
+    "r": "ink",
+    "p": "white2"
+   },
+   "theme": "halloween",
+   "hair": "bald",
+   "outfit": "pants",
+   "extra": [
+    "ribs"
+   ]
+  },
+  {
+   "id": "carbassa",
+   "name": "Carbassa (Halloween)",
+   "colors": {
+    "h": "ochre2",
+    "H": "ochre3",
+    "w": "ochre",
+    "W": "ochre2",
+    "b": "pine3"
+   },
+   "hat": "pumpkin",
+   "theme": "halloween",
+   "outfit": "pants"
+  },
+  {
+   "id": "nadal",
+   "name": "Pare Noel (Nadal)",
+   "colors": {
+    "h": "white",
+    "H": "white2",
+    "w": "red",
+    "W": "terra2",
+    "b": "red"
+   },
+   "hat": "santa",
+   "theme": "nadal"
+  }
+ ]
+}

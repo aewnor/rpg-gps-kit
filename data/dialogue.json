@@ -1,0 +1,52 @@
+{
+  "_doc": "Textos en català. Cada entrada té variants; s'usa la primera on es compleixen totes les condicions 'if' (flags, '!' = negació). Accions: set, give, take, equip, stamp. Els llocs són reals; les missions i personatges, inventats.",
+  "postie": {"name": "Marta, la carter", "variants": [
+    {"if": ["!postal_taken"], "pages": ["Hola! Sóc la Marta, la carter de Roda.", "Tinc una postal per al pescador del Roc de Sant Gaietà, però avui no arribo a tot.", "Me la portes? El Roc és a la costa, cap al sud-est."], "give": ["postcard"], "set": ["postal_taken"], "toast": "Has rebut: Postal"},
+    {"if": ["postal_taken", "!postal_done"], "pages": ["Baixa cap al mar i segueix la costa fins al Roc de Sant Gaietà."]},
+    {"pages": ["Gràcies per portar la postal! Ets un carter de primera."]}
+  ]},
+  "fisher": {"name": "En Pere, pescador", "variants": [
+    {"if": ["postal_taken", "!postal_done"], "pages": ["Una postal? Per a mi?", "És de la meva néta! Moltes gràcies per portar-la fins aquí."], "take": ["postcard"], "set": ["postal_done"], "toast": "Missió completada: La postal", "xp": 60, "coins": 10},
+    {"if": ["postal_done"], "pages": ["La guardaré a la barca, al costat de la brúixola."]},
+    {"pages": ["Bon dia! Avui el mar està tranquil."]}
+  ]},
+  "elder": {"name": "L'avi Josep", "variants": [
+    {"if": ["!mirador_asked"], "pages": ["Has pujat mai al mirador del Pujol de la Morella?", "És al nord del poble, passada la zona de l'Eixample.", "Ves-hi i després torna a explicar-me què has vist."], "set": ["mirador_asked"]},
+    {"if": ["mirador_asked", "!visited_mirador_morella"], "pages": ["El mirador és al nord. Busca el camí que puja entre els pins."]},
+    {"if": ["visited_mirador_morella", "!mirador_done"], "pages": ["Oi que es veu tot? El poble, la platja i el mar.", "De jove hi pujava cada diumenge."], "set": ["mirador_done"], "toast": "Missió completada: El mirador", "xp": 60, "coins": 10},
+    {"pages": ["Quan siguis gran, potser hi pujaràs amb els teus néts."]}
+  ]},
+  "baker": {"name": "La Carme, forner", "variants": [
+    {"if": ["!has_notebook"], "pages": ["Bon dia! Vols conèixer el poble?", "Té aquest quadern de llocs. Visita'ls tots i cada pàgina quedarà segellada."], "give": ["notebook"], "set": ["has_notebook"], "toast": "Has rebut: Quadern de llocs"},
+    {"if": ["has_notebook", "!notebook_done"], "pages": ["Encara et queden {remaining} llocs per segellar al quadern."]},
+    {"if": ["notebook_done", "!notebook_paid"], "pages": ["Has omplert tot el quadern! Ja coneixes Roda de Berà de punta a punta.", "Té, una coca de recapte i unes monedes per al camí."], "give": ["coca"], "set": ["notebook_paid"], "xp": 120, "coins": 30, "toast": "Missió completada: El quadern"},
+    {"pages": ["Has omplert tot el quadern! Ja coneixes Roda de Berà de punta a punta."]}
+  ]},
+  "girl": {"name": "La Laia", "variants": [
+    {"pages": ["Saps que pel Camí de Ronda pots anar vora el mar fins al Roc de Sant Gaietà?", "Comença prop de la Platja Llarga."]}
+  ]},
+  "ranger": {"name": "L'Anna, agent forestal", "variants": [
+    {"if": ["!got_sword"], "pages": ["Compte! Hi ha un senglar rondant per la pedrera.", "Si hi vas, emporta't aquesta espasa de fusta i aquest escut.", "X: atacar.  C: protegir-te (gasta energia)."], "give": ["sword_wood", "shield_wood"], "equip": ["sword_wood", "shield_wood"], "set": ["got_sword"], "toast": "Has rebut: Espasa de fusta i escut"},
+    {"pages": ["Diuen que a la pedrera hi ha una cova amagada. És una llegenda, eh!", "Prem X per atacar i mantén C per protegir-te."]}
+  ]},
+  "sign_sant_bartomeu": {"variants": [{"pages": ["Església de Sant Bartomeu.", "El cor del poble de Roda de Berà."]}]},
+  "sign_arc_de_bera": {"variants": [{"pages": ["Arc de Berà.", "Un arc romà de fa uns 2.000 anys, al costat de l'antiga Via Augusta."]}]},
+  "sign_roc_sant_gaieta": {"variants": [{"pages": ["El Roc de Sant Gaietà.", "Carrerons i cases de pedra arran de mar."]}]},
+  "sign_ermita_bera": {"variants": [{"pages": ["Ermita de la Mare de Déu de Berà.", "Molt a prop de la Platja Llarga."]}]},
+  "sign_pedrera_elies": {"variants": [{"pages": ["Pedrera de l'Elies.", "Compte amb les parets de roca!"]}]},
+  "sign_cucurull": {"variants": [{"pages": ["Torre del Cucurull.", "Unes restes de pedra dalt del turó."]}]},
+  "sign_mirador_morella": {"variants": [{"pages": ["Mirador del Pujol de la Morella.", "Des d'aquí es veu el poble sencer i el mar."]}]},
+  "sign_roda_de_mar": {"variants": [{"pages": ["Roda de Mar.", "Els horaris dels trens d'aquest joc són inventats."]}]},
+  "sign_ajuntament": {"variants": [{"pages": ["Ajuntament de Roda de Berà.", "Al balcó hi ha les banderes. A la plaça es fan les festes del poble."]}]},
+  "sign_biblioteca": {"variants": [{"pages": ["Biblioteca Municipal Joan Martorell Coca.", "Horari d'estiu: de 10 a 13 h (inventat). Silenci, si us plau!"]}]},
+  "sign_castell_creixell": {"variants": [{"pages": ["Castell de Creixell.", "Un castell medieval al poble del costat, dalt del turó."]}]},
+  "cave_sign": {"variants": [{"pages": ["Cova de la Pedrera (una cova inventada).", "Prem X per atacar. Mantén C per protegir-te amb l'escut.", "Prova la palanca per obrir la reixa."]}]},
+  "dungeon_sign": {"variants": [{"pages": ["Masmorra del Castell (inventada).", "Al fons de tot hi ha un cofre llegendari... però els senglars d'aquí baix són més forts.", "Les torxes il·luminen poc: amb una llanterna hi veuràs millor."]}]},
+  "dungeon_locked": {"variants": [{"pages": ["La porta de la masmorra pesa molt...", "Torna quan siguis de nivell 3 o més."]}]},
+  "cova_roda_sign": {"variants": [{"pages": ["Cova de Roda. La boca és on diu el mapa; a dins, tot és inventat.", "Les escales de corda baixen cada cop més avall... i cada cop hi ha menys torxes.", "Prem C per protegir-te i X per atacar. Al fons diuen que hi ha alguna cosa que brilla."]}]},
+  "cave_locked": {"variants": [{"pages": ["La cova és fosca i fa por...", "Potser l'agent forestal et pot ajudar."]}]},
+  "gate_closed": {"variants": [{"pages": ["La reixa està tancada."]}]},
+  "chest_sword": {"variants": [{"pages": ["Has trobat l'Espasa de Berà!", "Fa més mal i arriba més lluny. Ja la portes equipada."]}]},
+  "chest_empty": {"variants": [{"pages": ["El cofre és buit."]}]},
+  "notebook_done": {"variants": [{"pages": ["Has segellat tots els llocs del quadern!", "Torna a veure la Carme, al forn."]}]}
+}

@@ -1,0 +1,10 @@
+{
+ "_doc": "Configuració del joc al servidor (tools/web_server.py → /api/config). La llegeix el joc en arrencar, també al mòbil; s'edita des del PC a /editor/config.html (amb el PIN d'adult) o a mà a config/joc.json.",
+ "versio": 1,
+ "veu": null,
+ "volum": 0.6,
+ "volum_musica": 0.45,
+ "temps": "auto",
+ "mostrar_tots_els_locals": false,
+ "locals_verificats": []
+}

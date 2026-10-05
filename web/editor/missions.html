@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor de misiones</title>
+<style>
+:root {
+  --bg: #16141a; --panel: #211e27; --panel2: #2b2733; --line: #3a3544; --text: #ece6da;
+  --muted: #a59da9; --accent: #e6bd6b; --accent2: #55c6c3; --danger: #e26d5c; --ok: #7cc47c; --warn: #e2b35c;
+  --nav: #5c9ef2; --social: #ed85b8; --safety: #73d973; --job: #ebcc59; --epic: #f28540;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+  font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+button, select, input, textarea { font: inherit; color: var(--text); background: var(--panel2);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+button { cursor: pointer; white-space: nowrap; }
+button:hover:not(:disabled) { border-color: var(--accent); }
+button:disabled { opacity: .5; cursor: default; }
+button.primary { background: var(--accent2); color: #10232a; border-color: var(--accent2); font-weight: 600; }
+button.gold { background: var(--accent); color: #1f1a24; border-color: var(--accent); font-weight: 600; }
+button.danger { border-color: var(--danger); color: var(--danger); }
+button.ghost { background: transparent; border-color: transparent; padding: 3px 6px; }
+button.ghost:hover:not(:disabled) { border-color: var(--line); }
+input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--accent2); outline-offset: -1px; }
+#app { display: grid; grid-template-columns: 250px 1fr 340px; grid-template-rows: 48px 1fr; height: 100%; }
+header { grid-column: 1 / 4; display: flex; align-items: center; gap: 8px; padding: 0 12px;
+  background: var(--panel); border-bottom: 1px solid var(--line); overflow-x: auto; }
+header h1 { font-size: 15px; margin: 0 8px 0 0; white-space: nowrap; }
+header .sp { flex: 1; }
+header a { text-decoration: none; }
+#status { color: var(--muted); white-space: nowrap; font-size: 13px; }
+aside { background: var(--panel); overflow-y: auto; padding: 10px; }
+#left { border-right: 1px solid var(--line); }
+#right { border-left: 1px solid var(--line); }
+h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 16px 0 6px; }
+aside > h2:first-child, aside > section:first-child h2 { margin-top: 0; }
+main { overflow-y: auto; padding: 14px 18px 60px; }
+.hint { color: var(--muted); font-size: 12px; margin: 4px 0; }
+.row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 6px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px 10px; margin-bottom: 8px; }
+.f { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.f > span { color: var(--muted); font-size: 11.5px; }
+.f.wide { grid-column: 1 / -1; }
+.f input, .f select, .f textarea { width: 100%; min-width: 0; }
+.f.check { flex-direction: row; align-items: center; gap: 6px; padding-top: 16px; }
+.f.check input { width: auto; }
+textarea { resize: vertical; min-height: 54px; }
+/* lista de campañas */
+#camps button.camp { display: block; width: 100%; text-align: left; margin-bottom: 4px; padding: 7px 9px; white-space: normal; }
+#camps button.camp.sel { border-color: var(--accent); background: #34303d; }
+.camp .t { display: block; font-weight: 600; }
+.camp .m { display: block; color: var(--muted); font-size: 12px; }
+.badge { display: inline-block; font-size: 11px; border-radius: 9px; padding: 0 6px; margin-left: 4px; vertical-align: 1px; }
+.badge.e { background: var(--danger); color: #1b0f0d; }
+.badge.w { background: #4a3f26; color: var(--warn); }
+.badge.d { background: var(--accent); color: #1f1a24; }
+/* pestañas */
+.tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 1px solid var(--line); }
+.tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; padding: 6px 12px; color: var(--muted); }
+.tabs button.on { color: var(--text); border-bottom-color: var(--accent); }
+/* tarjetas de misión */
+.mission { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--c, var(--line));
+  border-radius: 8px; margin-bottom: 8px; }
+.mission > .head { display: flex; align-items: center; gap: 8px; padding: 7px 8px 7px 10px; cursor: pointer; }
+.mission > .head .ttl { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mission > .head .id { color: var(--muted); font: 12px ui-monospace, monospace; }
+.mission > .head .n { color: var(--muted); font-size: 12px; }
+.mission > .body { padding: 4px 12px 12px; border-top: 1px solid var(--line); }
+.mission.err { box-shadow: 0 0 0 1px var(--danger); }
+.step { background: var(--panel2); border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; margin: 8px 0; }
+.step .shead { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.step .shead .num { color: var(--muted); font-size: 12px; min-width: 40px; }
+.step .what { color: var(--muted); font-size: 12px; flex: 1; }
+.empty { color: var(--muted); padding: 30px 0; text-align: center; }
+.note { background: #2a2532; border: 1px dashed var(--line); border-radius: 8px; padding: 8px 10px; color: var(--muted); font-size: 13px; margin: 8px 0; }
+#json { width: 100%; min-height: 70vh; font: 12.5px/1.45 ui-monospace, monospace; white-space: pre; tab-size: 2; }
+/* panel derecho */
+#issues, .issues { font-size: 12.5px; }
+#issues .e, #issues .w, .issues .e, .issues .w { padding: 3px 0 3px 18px; position: relative; cursor: pointer; }
+#issues .e::before, .issues .e::before { content: "✖"; color: var(--danger); position: absolute; left: 2px; }
+#issues .w::before, .issues .w::before { content: "!"; color: var(--warn); position: absolute; left: 6px; font-weight: 700; }
+#issues .ok, .issues .ok { color: var(--ok); }
+#aiBox textarea { width: 100%; min-height: 76px; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+.chips button { font-size: 12px; padding: 3px 8px; border-radius: 12px; }
+#aiResult { margin-top: 8px; }
+.diff { font-size: 12.5px; background: var(--bg); border-radius: 6px; padding: 8px; margin: 6px 0; }
+.diff .a { color: var(--ok); } .diff .r { color: var(--danger); } .diff .c { color: var(--accent); }
+#log { white-space: pre-wrap; font: 12px/1.35 ui-monospace, monospace; background: #0d0c10; padding: 6px;
+  border-radius: 6px; max-height: 180px; overflow-y: auto; color: var(--muted); }
+dialog { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 10px;
+  width: min(760px, 94vw); max-height: 90vh; }
+dialog::backdrop { background: rgba(0,0,0,.55); }
+dialog textarea { width: 100%; min-height: 220px; font: 12px ui-monospace, monospace; }
+.spin { display: inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+@media (max-width: 1000px) {
+  #app { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr auto; height: auto; }
+  header { grid-column: 1; flex-wrap: wrap; padding: 6px 12px; overflow: visible; }
+  header .sp { display: none; }
+  header button { min-height: 40px; }
+  #left, #right { border: 0; border-top: 1px solid var(--line); }
+  #left { max-height: 40vh; }
+  main { padding: 12px; }
+  .mission > .head { gap: 4px; }
+  .mission > .head .id { display: none; }
+  .step .shead { flex-wrap: wrap; }
+  .step .what { order: 5; flex-basis: 100%; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>📜 Editor de misiones</h1>
+    <a href="./"><button title="Volver al editor de zonas">🗺️ Zonas</button></a>
+    <span class="sp"></span>
+    <span id="status">Cargando…</span>
+    <button id="btnSave" title="Guarda la campaña en data/missions.json (Ctrl+S)">💾 Guardar</button>
+    <button id="btnPublish" class="primary" title="Guarda y regenera el juego web con las misiones nuevas">🚀 Publicar</button>
+    <a href="/" target="_blank"><button>🎮 Juego</button></a>
+  </header>
+  <aside id="left">
+    <h2>Campañas</h2>
+    <div id="camps"></div>
+    <div class="row" style="margin-top:8px">
+      <button id="btnNew" title="Campaña nueva vacía">＋ Nueva</button>
+      <button id="btnImport" title="Importar un JSON (exportado, mejorado por un LLM o un parche)">⬆️ Importar</button>
+    </div>
+    <div class="row">
+      <button id="btnUp" class="ghost" title="Subir la campaña seleccionada">↑ Subir</button>
+      <button id="btnDown" class="ghost" title="Bajar la campaña seleccionada">↓ Bajar</button>
+      <button id="btnDel" class="ghost danger" title="Borrar la campaña seleccionada">🗑️</button>
+    </div>
+    <p class="hint">El orden importa: la primera campaña es la inicial; las demás se abren cuando se han hecho
+      «unlock» misiones de la campaña «después de».</p>
+    <h2>Cómo funciona</h2>
+    <p class="hint">Cada campaña se puede descargar en JSON (⬇️) con instrucciones y la lista de lugares,
+      objetos y escenas válidos. Pásalo a ChatGPT/Claude, pide que lo amplíe y vuelve a importarlo: el editor
+      valida todo y te enseña los cambios antes de guardar. O usa ✨ IA aquí mismo.</p>
+  </aside>
+  <main id="main"><div class="empty">Cargando campañas…</div></main>
+  <aside id="right">
+    <section>
+      <h2>Validación</h2>
+      <div id="issues" class="hint">—</div>
+    </section>
+    <section id="aiBox">
+      <h2>✨ Mejorar con IA</h2>
+      <textarea id="aiText" placeholder="Qué quieres: «añade 3 misiones de seguridad vial cerca de la escuela», «haz los textos más divertidos», «una misión nueva con el cofre de la cueva»…"></textarea>
+      <div class="chips" id="aiChips"></div>
+      <div class="row"><button id="btnAi" class="gold">✨ Proponer cambios</button>
+        <span class="hint">No guarda nada: revisas y aplicas.</span></div>
+      <div id="aiResult"></div>
+    </section>
+    <section>
+      <h2>Exportar</h2>
+      <div class="row">
+        <button id="btnDownload" title="Descarga la campaña con instrucciones y referencia para un LLM">⬇️ Descargar JSON</button>
+        <button id="btnCopy" title="Copia el mismo JSON al portapapeles para pegarlo en un chat">📋 Copiar para LLM</button>
+      </div>
+      <p class="hint">Se exporta la versión guardada; guarda antes si has cambiado algo.</p>
+    </section>
+    <section>
+      <h2>Publicación</h2>
+      <div id="log">Sin publicar en esta sesión.</div>
+    </section>
+  </aside>
+</div>
+<dialog id="dlgImport">
+  <form method="dialog" id="importForm">
+    <h3 style="margin-top:0">⬆️ Importar campaña</h3>
+    <p class="hint">Pega el JSON (el descargado, el que te devuelva un LLM, una campaña suelta o un parche
+      <code>{"format":"roda-rpg-campaign-patch","upsert":[…]}</code>) o elige un fichero.</p>
+    <div class="row"><input type="file" id="impFile" accept=".json,application/json"></div>
+    <textarea id="impText" spellcheck="false" placeholder='{"format":"roda-rpg-campaign", "campaign": {…}}'></textarea>
+    <div id="impResult"></div>
+    <div class="row" style="justify-content:flex-end;margin-top:8px">
+      <button value="cancel">Cancelar</button>
+      <button id="impCheck" type="button">🔍 Analizar</button>
+      <button id="impApply" type="button" class="primary" disabled>Cargar en el editor</button>
+    </div>
+  </form>
+</dialog>
+<datalist id="dlTargets"></datalist>
+<datalist id="dlItems"></datalist>
+<datalist id="dlScenes"></datalist>
+<datalist id="dlEvents"></datalist>
+<datalist id="dlServices"></datalist>
+<script src="/adult.js"></script>
+<script src="missions.js"></script>
+</body>
+</html>

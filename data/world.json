@@ -1,0 +1,46 @@
+{
+  "_doc": "Configuració espacial (copiada de cartography/world-plan.json). La casa del jugador NO es desa aquí: va a home.json al directori de dades de LÖVE.",
+  "schema_version": 1,
+  "scene": "overworld",
+  "tile_size_px": 16,
+  "width_tiles": 640,
+  "height_tiles": 640,
+  "meters_per_tile_approx": 4.0,
+  "origin_lon": 1.363314,
+  "origin_lat": 41.153311,
+  "reference_lat": 41.1418,
+  "home_player_location": {
+    "configured": false,
+    "scene": "overworld",
+    "lon": null,
+    "lat": null,
+    "tile_x": null,
+    "tile_y": null,
+    "fallback_spawn_id": "spawn_public_centre"
+  },
+  "start_spawn": "spawn_public_centre",
+  "pois": [],
+  "player": {
+    "speed": 64,
+    "collider": [
+      10,
+      8
+    ],
+    "hp": 6,
+    "stamina": 100,
+    "stamina_regen": 30
+  },
+  "trains": {
+    "period": 60,
+    "speed": 80,
+    "stop": 5
+  },
+  "name": "Altafulla",
+  "center_lat": 41.1418,
+  "center_lon": 1.3786,
+  "cars": {
+    "speed": 60,
+    "gap": 40,
+    "count": {}
+  }
+}

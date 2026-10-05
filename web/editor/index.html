@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor de zonas</title>
+<style>
+:root {
+  --bg: #16141a; --panel: #211e27; --panel2: #2b2733; --line: #3a3544; --text: #ece6da;
+  --muted: #a59da9; --accent: #e6bd6b; --accent2: #55c6c3; --danger: #e26d5c; --ok: #7cc47c;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+  font: 14px/1.35 system-ui, -apple-system, "Segoe UI", sans-serif; }
+button, select, input, textarea { font: inherit; color: var(--text); background: var(--panel2);
+  border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+button { cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button.on { background: var(--accent); color: #1f1a24; border-color: var(--accent); }
+button.primary { background: var(--accent2); color: #10232a; border-color: var(--accent2); font-weight: 600; }
+button.danger { border-color: var(--danger); color: var(--danger); }
+#app { display: grid; grid-template-columns: 280px 1fr 300px; grid-template-rows: 48px 1fr; height: 100%; }
+header { grid-column: 1 / 4; display: flex; align-items: center; gap: 8px; padding: 0 12px;
+  background: var(--panel); border-bottom: 1px solid var(--line); overflow-x: auto; }
+header h1 { font-size: 15px; margin: 0 8px 0 0; white-space: nowrap; }
+header .sp { flex: 1; }
+#status { color: var(--muted); white-space: nowrap; font-size: 13px; }
+aside { background: var(--panel); overflow-y: auto; padding: 10px; }
+aside h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 14px 0 6px; }
+aside h2:first-child { margin-top: 0; }
+#left { border-right: 1px solid var(--line); }
+#right { border-left: 1px solid var(--line); }
+.row { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin-bottom: 4px; }
+.row label { color: var(--muted); font-size: 12px; min-width: 56px; }
+.row input[type=number] { width: 64px; }
+.row input[type=text], .row select, textarea { flex: 1; min-width: 0; }
+textarea { width: 100%; min-height: 70px; resize: vertical; }
+#palette { display: grid; grid-template-columns: repeat(auto-fill, 36px); gap: 3px; }
+#palette canvas { width: 36px; height: 36px; image-rendering: pixelated; border: 2px solid transparent;
+  border-radius: 4px; background: #0d0c10; cursor: pointer; }
+#palette canvas.sel { border-color: var(--accent); }
+#palname { color: var(--muted); font-size: 12px; min-height: 16px; margin-top: 4px; }
+main { position: relative; overflow: hidden; background: #0d0c10; }
+#view { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; touch-action: none; }
+#hud { position: absolute; left: 8px; bottom: 8px; background: rgba(22,20,26,.85); padding: 4px 8px;
+  border-radius: 6px; font-size: 12px; color: var(--muted); pointer-events: none; }
+#log { white-space: pre-wrap; font: 12px/1.35 ui-monospace, monospace; background: #0d0c10; padding: 6px;
+  border-radius: 6px; max-height: 220px; overflow-y: auto; color: var(--muted); }
+.hint { color: var(--muted); font-size: 12px; margin: 4px 0; }
+.warn { color: var(--danger); font-size: 12px; }
+.list button { display: block; width: 100%; text-align: left; margin-bottom: 3px; }
+dialog { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 10px; min-width: 300px; }
+dialog::backdrop { background: rgba(0,0,0,.5); }
+@media (max-width: 900px) {
+  /* móvil: cabecera en varias líneas, el mapa primero y las herramientas debajo */
+  #app { grid-template-columns: 1fr; grid-template-rows: auto 60vh auto auto; height: auto; }
+  header { grid-column: 1; flex-wrap: wrap; padding: 6px 12px; overflow: visible; }
+  header .sp { display: none; }
+  header button, header select { min-height: 40px; }
+  main { min-height: 60vh; order: 1; }
+  header { order: 0; }
+  #left { order: 2; }
+  #right { order: 3; }
+  #left, #right { border: 0; border-top: 1px solid var(--line); }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>🗺️ Editor de zonas</h1>
+    <select id="zoneSel" title="Zona"></select>
+    <button id="btnNewZone" title="Dibuja un rectángulo en el mapa">＋ Zona nueva</button>
+    <button id="btnNpcs" title="Personajes sueltos por el mapa (pueden hablar con IA)">🧑 Personajes</button>
+    <a href="missions.html"><button title="Campañas de misiones: editar, descargar en JSON, importar y mejorar con IA">📜 Misiones</button></a>
+    <a href="config.html"><button title="Configuración del juego en el servidor (voz, volumen, tiempo, comercios): la ve también el móvil">⚙️ Config</button></a>
+    <button id="btnMapEdit" title="Retoca casillas del mapa fuera de las zonas: arrastra un recuadro y pinta con las mismas herramientas">🖌️ Editar mapa</button>
+    <select id="areaSel" title="Exterior o interior"></select>
+    <button id="btnUndo" title="Deshacer (Ctrl+Z)">↶</button>
+    <button id="btnRedo" title="Rehacer (Ctrl+Y)">↷</button>
+    <span class="sp"></span>
+    <span id="status">Cargando…</span>
+    <button id="btnSave">💾 Guardar</button>
+    <button id="btnPublish" class="primary" title="Guarda, recompila el mapa y regenera el juego web">🚀 Publicar</button>
+    <a href="/" target="_blank"><button>🎮 Juego</button></a>
+  </header>
+  <aside id="left">
+    <h2>Herramienta</h2>
+    <div class="row" id="tools"></div>
+    <div class="row" id="brushRow"><label>Pincel</label>
+      <button data-bs="1" class="on">1</button><button data-bs="2">2</button><button data-bs="3">3</button></div>
+    <h2>Capa</h2>
+    <div class="row" id="layers"></div>
+    <div id="heightBox" hidden>
+      <h2>Altura</h2>
+      <div class="row" id="heights"></div>
+      <p class="hint">Cada nivel es un escalón de roca. Entre alturas distintas solo se pasa por una
+        escalera (pinta 🪜 en Estructuras en el borde alto). Fuera de la zona la altura es 0.</p>
+    </div>
+    <div id="buildBox" hidden>
+      <h2>Edificio</h2>
+      <div class="row"><label>Tejado</label><select id="bRoof"><option>terra</option><option>brown</option><option>slate</option><option>stone</option><option>flat</option><option>metal</option><option>glass</option></select></div>
+      <div class="row"><label>Fachada</label><select id="bWall"><option>white</option><option>ochre</option><option>stone</option><option>sand</option><option>salmon</option><option>sky</option><option>brick</option><option>metal</option><option>glass</option></select></div>
+      <div class="row"><label>Interior</label><input type="checkbox" id="bInterior" checked> <span class="hint">puerta con interior nuevo</span></div>
+      <p class="hint">Arrastra un rectángulo: la última fila es la fachada con la puerta en el centro.</p>
+    </div>
+    <div id="objBox" hidden>
+      <h2>Objeto a colocar</h2>
+      <div class="row" id="objTypes"></div>
+      <p class="hint">Clic para colocar; con la herramienta ✋ selecciona y arrastra.</p>
+    </div>
+    <div id="palBox">
+      <h2>Paleta</h2>
+      <div class="row"><select id="palCat"></select></div>
+      <div id="palette"></div>
+      <div id="palname"></div>
+    </div>
+  </aside>
+  <main>
+    <canvas id="view"></canvas>
+    <div id="hud"></div>
+  </main>
+  <aside id="right">
+    <div id="props"></div>
+    <h2>Vista</h2>
+    <div class="row"><input type="checkbox" id="vGrid" checked><label for="vGrid">Rejilla</label></div>
+    <div class="row"><input type="checkbox" id="vHeight" checked><label for="vHeight">Alturas (números y color)</label></div>
+    <div class="row"><input type="checkbox" id="vTrace"><label for="vTrace">Calco del mapa publicado</label></div>
+    <h2>Avisos</h2>
+    <div id="warnings" class="hint">—</div>
+    <h2>Publicación</h2>
+    <div id="log">Sin publicar en esta sesión.</div>
+    <h2>Ayuda</h2>
+    <p class="hint">Rueda: zoom · botón derecho o central (o espacio + arrastrar): mover ·
+      Ctrl+Z / Ctrl+Y · teclas 1–6: capas · B pincel, R rectángulo, F relleno, E goma, I cuentagotas.</p>
+  </aside>
+</div>
+<dialog id="dlg"><form method="dialog" id="dlgForm"></form></dialog>
+<script src="/adult.js"></script>
+<script src="editor.js"></script>
+</body>
+</html>

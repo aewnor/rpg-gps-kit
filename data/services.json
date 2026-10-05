@@ -1,0 +1,218 @@
+{
+ "_doc": "Serveis del poble generats de l'OSM per tools/make_services.py (es poden editar a mà: noms, estocs, offset [dx, dy] o «runtime» + «pos»). kind: townhall | police | post | doctor | school | library | shop | super | sports | station | restaurant; poi: interior (diy, football…) si no és el del kind.",
+ "services": [
+  {
+   "id": "ajuntament",
+   "kind": "townhall",
+   "label": "Ajuntament d'Altafulla",
+   "name": "L'alcaldessa",
+   "sprite": "npc_lady",
+   "osm": "node/3870074499"
+  },
+  {
+   "id": "policia",
+   "kind": "police",
+   "label": "Policia Local d'Altafulla",
+   "name": "Agent de policia",
+   "sprite": "npc_police",
+   "osm": "node/11074256501"
+  },
+  {
+   "id": "correus",
+   "kind": "post",
+   "label": "Correus",
+   "name": "El carter",
+   "sprite": "npc_postie",
+   "osm": "node/11074256500"
+  },
+  {
+   "id": "metge",
+   "kind": "doctor",
+   "label": "Consultori Mèdic",
+   "name": "La metgessa",
+   "sprite": "npc_doctor",
+   "osm": "node/11074274415"
+  },
+  {
+   "id": "escola",
+   "kind": "school",
+   "label": "Escola La Portalada",
+   "name": "La mestra",
+   "sprite": "npc_teacher",
+   "osm": "way/1073910253"
+  },
+  {
+   "id": "biblioteca",
+   "kind": "library",
+   "label": "Biblioteca Municipal d'Altafulla",
+   "name": "La bibliotecària",
+   "sprite": "npc_librarian",
+   "osm": "node/6539167848"
+  },
+  {
+   "id": "super",
+   "kind": "super",
+   "label": "Mercadona",
+   "name": "La caixera",
+   "sprite": "npc_clerk",
+   "osm": "way/591587903",
+   "stock": [
+    "poma",
+    "pa",
+    "aigua",
+    "botiqui",
+    "mandarina",
+    "ametlles",
+    "suc_raim",
+    "arros",
+    "pasta",
+    "conserva",
+    "llet",
+    "formatge",
+    "tomaquet"
+   ]
+  },
+  {
+   "id": "super_2",
+   "kind": "super",
+   "label": "Caprabo",
+   "name": "La caixera",
+   "sprite": "npc_clerk",
+   "osm": "way/197250116",
+   "stock": [
+    "poma",
+    "pa",
+    "aigua",
+    "botiqui",
+    "mandarina",
+    "ametlles",
+    "suc_raim",
+    "arros",
+    "pasta",
+    "conserva",
+    "llet",
+    "formatge",
+    "tomaquet"
+   ]
+  },
+  {
+   "id": "super_3",
+   "kind": "super",
+   "label": "Els vents",
+   "name": "La caixera",
+   "sprite": "npc_clerk",
+   "osm": "node/4395367390",
+   "stock": [
+    "poma",
+    "pa",
+    "aigua",
+    "botiqui",
+    "mandarina",
+    "ametlles",
+    "suc_raim",
+    "arros",
+    "pasta",
+    "conserva",
+    "llet",
+    "formatge",
+    "tomaquet"
+   ]
+  },
+  {
+   "id": "super_4",
+   "kind": "super",
+   "label": "Gori",
+   "name": "La caixera",
+   "sprite": "npc_clerk",
+   "osm": "node/4395405789",
+   "stock": [
+    "poma",
+    "pa",
+    "aigua",
+    "botiqui",
+    "mandarina",
+    "ametlles",
+    "suc_raim",
+    "arros",
+    "pasta",
+    "conserva",
+    "llet",
+    "formatge",
+    "tomaquet"
+   ]
+  },
+  {
+   "id": "poliesportiu",
+   "kind": "sports",
+   "label": "Zona Esportiva Municipal",
+   "name": "La monitora",
+   "sprite": "npc_coach",
+   "osm": "way/370845716"
+  },
+  {
+   "id": "camp_futbol",
+   "kind": "sports",
+   "label": "Camp de futbol",
+   "name": "L'àrbitre",
+   "sprite": "npc_police",
+   "osm": "way/777827046",
+   "poi": "football"
+  },
+  {
+   "id": "estacio",
+   "kind": "station",
+   "label": "Altafulla - Tamarit",
+   "name": "El cap d'estació",
+   "sprite": "npc_police",
+   "osm": "node/5435480586"
+  },
+  {
+   "id": "rest",
+   "kind": "restaurant",
+   "label": "El Buffet d'Altafulla",
+   "name": "El cambrer · El Buffet d'Altafulla",
+   "sprite": "npc_sailor",
+   "osm": "way/313201980"
+  },
+  {
+   "id": "rest_2",
+   "kind": "restaurant",
+   "label": "Restaurant",
+   "name": "La cambrera · Restaurant",
+   "sprite": "npc_sailor",
+   "osm": "way/995948382"
+  },
+  {
+   "id": "rest_3",
+   "kind": "restaurant",
+   "label": "Voramar Cal Vitali",
+   "name": "El cambrer · Voramar Cal Vitali",
+   "sprite": "npc_sailor",
+   "osm": "way/1030747537"
+  },
+  {
+   "id": "rest_4",
+   "kind": "restaurant",
+   "label": "Bar la Violeta",
+   "name": "La cambrera · Bar la Violeta",
+   "sprite": "npc_sailor",
+   "osm": "node/1308233238"
+  },
+  {
+   "id": "rest_5",
+   "kind": "restaurant",
+   "label": "Bar Ca la Mari",
+   "name": "El cambrer · Bar Ca la Mari",
+   "sprite": "npc_sailor",
+   "osm": "node/3594824897"
+  },
+  {
+   "id": "rest_6",
+   "kind": "restaurant",
+   "label": "La Taberna del Mar",
+   "name": "La cambrera · La Taberna del Mar",
+   "sprite": "npc_sailor",
+   "osm": "node/3594825816"
+  }
+ ]
+}

@@ -1,0 +1,430 @@
+{
+  "_doc": "Botí dels cofres per categoria (src/systems/loot.lua). Cada cofre dona 'rolls' objectes triats per pes de 'table' (sense repetir), monedes entre coins[0] i coins[1] i 'xp'. La tria és determinista per cofre (mateix cofre → mateix botí). Fusta: a la muntanya · ferro i plata: a les coves · llegendari: al fons de les masmorres.",
+  "wood": {
+    "label": "Cofre de fusta",
+    "rolls": 2,
+    "coins": [
+      3,
+      8
+    ],
+    "xp": 15,
+    "table": [
+      [
+        "poma",
+        5
+      ],
+      [
+        "pa",
+        4
+      ],
+      [
+        "aigua",
+        4
+      ],
+      [
+        "pinya",
+        4
+      ],
+      [
+        "petxina",
+        2
+      ],
+      [
+        "coca",
+        2
+      ],
+      [
+        "botiqui",
+        3
+      ],
+      [
+        "casc_bici",
+        1
+      ],
+      [
+        "samarreta_roda",
+        1
+      ],
+      [
+        "moneda_romana",
+        1
+      ],
+      [
+        "daga_mariner",
+        2
+      ],
+      [
+        "llanca_canya",
+        2
+      ],
+      [
+        "mandarina",
+        2
+      ],
+      [
+        "mel_bosc",
+        2
+      ],
+      [
+        "ametlles",
+        2
+      ],
+      [
+        "vidre_mari",
+        2
+      ],
+      [
+        "ploma",
+        2
+      ]
+    ]
+  },
+  "iron": {
+    "label": "Cofre de ferro",
+    "rolls": 2,
+    "coins": [
+      10,
+      20
+    ],
+    "xp": 35,
+    "table": [
+      [
+        "sword_iron",
+        3
+      ],
+      [
+        "shield_iron",
+        3
+      ],
+      [
+        "armadura_cuir",
+        3
+      ],
+      [
+        "casc_ferro",
+        2
+      ],
+      [
+        "farmaciola",
+        3
+      ],
+      [
+        "botiqui",
+        3
+      ],
+      [
+        "llanterna",
+        2
+      ],
+      [
+        "moneda_romana",
+        2
+      ],
+      [
+        "sabre_costa",
+        2
+      ],
+      [
+        "destral_bosc",
+        2
+      ],
+      [
+        "escut_petxina",
+        2
+      ],
+      [
+        "escut_fulla",
+        2
+      ],
+      [
+        "casc_miner",
+        2
+      ],
+      [
+        "armilla_explorador",
+        2
+      ],
+      [
+        "capa_marina",
+        2
+      ],
+      [
+        "sopa_peix",
+        2
+      ]
+    ]
+  },
+  "silver": {
+    "label": "Cofre de plata",
+    "rolls": 2,
+    "coins": [
+      20,
+      35
+    ],
+    "xp": 60,
+    "table": [
+      [
+        "shield_plata",
+        3
+      ],
+      [
+        "armadura_plata",
+        3
+      ],
+      [
+        "pla_scooter",
+        2
+      ],
+      [
+        "pla_moto",
+        2
+      ],
+      [
+        "gema",
+        3
+      ],
+      [
+        "farmaciola",
+        2
+      ],
+      [
+        "botiqui",
+        2
+      ],
+      [
+        "martell_pedrera",
+        2
+      ],
+      [
+        "gladi_roma",
+        2
+      ],
+      [
+        "basto_corall",
+        2
+      ],
+      [
+        "diadema_lluna",
+        2
+      ],
+      [
+        "agata",
+        2
+      ],
+      [
+        "fossil",
+        2
+      ],
+      [
+        "suc_raim",
+        2
+      ]
+    ]
+  },
+  "legend": {
+    "label": "Cofre llegendari",
+    "rolls": 3,
+    "coins": [
+      60,
+      90
+    ],
+    "xp": 150,
+    "always": [
+      "pla_cotxe"
+    ],
+    "table": [
+      [
+        "sword_castell",
+        3
+      ],
+      [
+        "armadura_bera",
+        3
+      ],
+      [
+        "corona_castell",
+        3
+      ],
+      [
+        "gema",
+        2
+      ],
+      [
+        "fulla_lluna",
+        2
+      ],
+      [
+        "diadema_lluna",
+        2
+      ]
+    ]
+  },
+  "sea": {
+    "label": "Bagul mariner",
+    "rolls": 2,
+    "coins": [
+      3,
+      8
+    ],
+    "xp": 15,
+    "table": [
+      [
+        "daga_mariner",
+        3
+      ],
+      [
+        "sabre_costa",
+        3
+      ],
+      [
+        "escut_petxina",
+        3
+      ],
+      [
+        "vidre_mari",
+        3
+      ],
+      [
+        "sopa_peix",
+        3
+      ],
+      [
+        "poma",
+        5
+      ],
+      [
+        "pa",
+        4
+      ],
+      [
+        "aigua",
+        4
+      ]
+    ]
+  },
+  "forest": {
+    "label": "Cofre del bosc",
+    "rolls": 2,
+    "coins": [
+      3,
+      8
+    ],
+    "xp": 15,
+    "table": [
+      [
+        "llanca_canya",
+        3
+      ],
+      [
+        "destral_bosc",
+        3
+      ],
+      [
+        "escut_fulla",
+        3
+      ],
+      [
+        "mel_bosc",
+        3
+      ],
+      [
+        "ametlles",
+        3
+      ],
+      [
+        "poma",
+        5
+      ],
+      [
+        "pa",
+        4
+      ],
+      [
+        "aigua",
+        4
+      ]
+    ]
+  },
+  "roman": {
+    "label": "Arqueta romana",
+    "rolls": 2,
+    "coins": [
+      10,
+      20
+    ],
+    "xp": 35,
+    "table": [
+      [
+        "gladi_roma",
+        3
+      ],
+      [
+        "rajola_romana",
+        3
+      ],
+      [
+        "moneda_romana",
+        3
+      ],
+      [
+        "fossil",
+        3
+      ],
+      [
+        "sword_iron",
+        3
+      ],
+      [
+        "shield_iron",
+        3
+      ],
+      [
+        "armadura_cuir",
+        3
+      ]
+    ]
+  },
+  "crystal": {
+    "label": "Cofre de cristall",
+    "rolls": 2,
+    "coins": [
+      20,
+      35
+    ],
+    "xp": 60,
+    "table": [
+      [
+        "basto_corall",
+        3
+      ],
+      [
+        "diadema_lluna",
+        3
+      ],
+      [
+        "agata",
+        3
+      ],
+      [
+        "gema",
+        3
+      ],
+      [
+        "suc_raim",
+        3
+      ],
+      [
+        "shield_plata",
+        3
+      ],
+      [
+        "armadura_plata",
+        3
+      ],
+      [
+        "pla_scooter",
+        2
+      ]
+    ]
+  }
+}

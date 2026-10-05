@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "web/editor/missions.html"
+        ],
+        "createdAt": "2026-10-04T08:00:32.668Z",
+        "reason": "Claude: compact tool UI by design — icon-only ghost buttons (3px 6px) and count badges mirror the existing zone editor (web/editor/index.html)"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "web/editor/missions.html"
+        ],
+        "createdAt": "2026-10-04T08:00:32.692Z",
+        "reason": "Claude: dense editor chrome intentionally matches the zone editor's type scale (h1 15px / body 14px / section labels 12px uppercase)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,168 @@
+{
+ "_doc": "Creació d'objectes (src/systems/crafting.lua, 2026-10-05). gather: què dona cada element del mapa quan el colpeges amb l'espasa (un cop al dia per element; bonus = de vegades, amb probabilitat bonus_p). drops: el que deixen els animals i enemics en vèncer-los ([objecte, probabilitat, quantitat]). recipes: al banc de taller (cases i la casa del jugador), needs = materials que es gasten. short: nom curt dels materials per a la llista del taller. other_sources: objectes del taller i la granja que s'obtenen d'altres maneres (per a tests/variety_assets.py).",
+ "gather": {
+  "tree": {
+   "item": "fusta",
+   "say": "+1 Fusta"
+  },
+  "bush": {
+   "item": "fibra",
+   "say": "+1 Fibra vegetal"
+  },
+  "reeds": {
+   "item": "fibra",
+   "say": "+1 Fibra vegetal"
+  },
+  "rock": {
+   "item": "pedra",
+   "bonus": "ferro",
+   "bonus_p": 0.25,
+   "say": "+1 Pedra"
+  }
+ },
+ "drops": {
+  "wolf": [
+   [
+    "pell",
+    1.0,
+    2
+   ]
+  ],
+  "fox": [
+   [
+    "pell",
+    0.6,
+    1
+   ]
+  ],
+  "boar": [
+   [
+    "cuir",
+    0.7,
+    1
+   ]
+  ],
+  "boar_dark": [
+   [
+    "cuir",
+    1.0,
+    1
+   ]
+  ],
+  "bat_dark": [
+   [
+    "ploma",
+    0.4,
+    1
+   ]
+  ]
+ },
+ "recipes": [
+  {
+   "item": "sword_wood",
+   "needs": {
+    "fusta": 3
+   }
+  },
+  {
+   "item": "shield_wood",
+   "needs": {
+    "fusta": 4
+   }
+  },
+  {
+   "item": "canya_pescar",
+   "needs": {
+    "fusta": 2,
+    "fibra": 1
+   }
+  },
+  {
+   "item": "llanca_canya",
+   "needs": {
+    "fusta": 2,
+    "fibra": 2
+   }
+  },
+  {
+   "item": "escut_petxina",
+   "needs": {
+    "petxina": 4,
+    "fibra": 1
+   }
+  },
+  {
+   "item": "escut_fulla",
+   "needs": {
+    "fusta": 3,
+    "fibra": 3
+   }
+  },
+  {
+   "item": "armadura_cuir",
+   "needs": {
+    "cuir": 4
+   }
+  },
+  {
+   "item": "armilla_explorador",
+   "needs": {
+    "pell": 2,
+    "fibra": 2
+   }
+  },
+  {
+   "item": "capa_marina",
+   "needs": {
+    "pell": 2,
+    "ploma": 2
+   }
+  },
+  {
+   "item": "destral_bosc",
+   "needs": {
+    "fusta": 2,
+    "ferro": 2
+   }
+  },
+  {
+   "item": "casc_miner",
+   "needs": {
+    "ferro": 2,
+    "pedra": 1
+   }
+  },
+  {
+   "item": "llanterna",
+   "needs": {
+    "ferro": 1,
+    "fusta": 1,
+    "vidre_mari": 1
+   }
+  },
+  {
+   "item": "martell_pedrera",
+   "needs": {
+    "pedra": 4,
+    "fusta": 2,
+    "ferro": 2
+   }
+  }
+ ],
+ "short": {
+  "fusta": "fusta",
+  "fibra": "fibra",
+  "pedra": "pedra",
+  "ferro": "ferro",
+  "pell": "pell",
+  "cuir": "cuir",
+  "petxina": "petxina",
+  "ploma": "ploma",
+  "vidre_mari": "vidre de mar"
+ },
+ "other_sources": {
+  "pinso": "el pagès de les granges (src/systems/farm.lua), cada dia",
+  "ou": "les gallines de les granges quan mengen",
+  "radio": "el cofre del Casino Municipal (procgen.poi casino), la ràdio de butxaca"
+ }
+}

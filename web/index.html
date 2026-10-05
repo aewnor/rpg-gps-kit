@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 16 16%22%3E%3Crect x=%222%22 y=%223%22 width=%2212%22 height=%2211%22 fill=%22%23e3b866%22/%3E%3Crect x=%226%22 y=%227%22 width=%224%22 height=%227%22 fill=%22%231f1a24%22/%3E%3C/svg%3E">
+<meta name="theme-color" content="#1f1a24">
+<title>Roda de Berà</title>
+<style>
+  :root { --ink:#1f1a24; --paper:#f6f1e3; --terra:#d56b4b; --sea:#2f9eb0; }
+  html, body { margin:0; height:100%; background:var(--ink); color:var(--paper); overflow:hidden;
+    font-family: system-ui, sans-serif; touch-action:none; -webkit-user-select:none; user-select:none; }
+  #wrap { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; }
+  canvas#canvas { visibility:hidden; image-rendering:pixelated; image-rendering:crisp-edges;
+    width:100vw; height:100vh; outline:none; }
+  #loading { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; }
+  #loading h1 { margin:0; font-size:28px; letter-spacing:.04em; }
+  #bar { width:min(320px, 70vw); height:10px; border:2px solid var(--paper); }
+  #bar > div { height:100%; width:0; background:var(--terra); transition:width .2s; }
+  #msg { font-size:14px; opacity:.8; }
+  /* controles táctiles: solo en pantallas táctiles */
+  #pad { display:none; }
+  @media (pointer: coarse) { #pad { display:block; } }
+  .btn { padding:0; cursor:pointer; box-sizing:border-box; position:fixed; width:64px; height:64px; border-radius:50%; background:rgba(246,241,227,.18);
+    border:2px solid rgba(246,241,227,.55); color:var(--paper); font:600 15px system-ui; display:flex;
+    align-items:center; justify-content:center; touch-action:none; }
+  .btn.on { background:rgba(213,107,75,.6); }
+  /* cruceta de zona: 8 direcciones (en diagonal se pulsan dos flechas) */
+  #stick { position:fixed; left:14px; bottom:24px; width:clamp(112px,32vw,176px); height:clamp(112px,32vw,176px); border-radius:50%;
+    background:rgba(246,241,227,.12); border:2px solid rgba(246,241,227,.45); touch-action:none; }
+  #stick span { position:absolute; color:rgba(246,241,227,.6); font:600 16px system-ui; pointer-events:none; }
+  #stick .su { top:6px; left:50%; transform:translateX(-50%); } #stick .sd { bottom:6px; left:50%; transform:translateX(-50%); }
+  #stick .sl { left:8px; top:50%; transform:translateY(-50%); } #stick .sr { right:8px; top:50%; transform:translateY(-50%); }
+  #knob { position:absolute; width:62px; height:62px; left:calc(50% - 33px); top:calc(50% - 33px); border-radius:50%;
+    background:rgba(213,107,75,.55); border:2px solid rgba(246,241,227,.7); pointer-events:none; }
+  #a { right:16px; bottom:100px; } #x { right:88px; bottom:56px; } #c { right:88px; bottom:140px; width:52px; height:52px; }
+  #menu { right:16px; top:76px; width:56px; height:48px; border-radius:10px; }
+  #map  { right:80px; top:76px; width:56px; height:48px; border-radius:10px; }
+  #zin { right:80px; top:132px; width:56px; height:48px; border-radius:10px; font-size:24px; } #zout { right:16px; top:132px; width:56px; height:48px; border-radius:10px; font-size:24px; }
+  #zin,#zout { display:none; } body[data-zoom="1"] #zin,body[data-zoom="1"] #zout { display:flex; }
+  #vista { right:144px; top:76px; width:56px; height:48px; border-radius:10px; font-size:22px; }
+  body[data-zoom="1"] #vista { display:none; }
+  #bike { left:12px; top:76px; width:52px; height:44px; border-radius:10px; }
+  #hub-chrome { position:fixed; z-index:10; top:env(safe-area-inset-top,0px); left:0; right:0; display:flex; gap:8px; align-items:center; padding:6px 10px; background:var(--ink); font-size:16px; }
+  #hub-chrome a,#hub-chrome>button { min-height:48px; box-sizing:border-box; display:flex; align-items:center; padding:8px; background:var(--ink); border:1px solid var(--paper); color:var(--paper); text-decoration:none; font:600 16px system-ui; cursor:pointer; }
+  #hub-profile { margin-left:auto; }
+  #owner-info { position:fixed; z-index:10; top:calc(62px + env(safe-area-inset-top,0px)); left:10px; right:10px; font:12px system-ui; color:var(--paper); }
+  /* el nom del perfil ja surt al xip de dalt: el text només per a lectors de pantalla (tapava els cors) */
+  #owner-label { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  #owner-error:not(:empty) { display:block; padding:8px; background:var(--ink); font-size:16px; }
+  #owner-info button { min-height:48px; font:16px system-ui; }
+  body[data-text-mode="form"] #owner-info { display:none; }
+  @media (max-width:380px) { #hub-chrome { gap:4px; padding:4px; } #hub-chrome>button { font-size:14px; max-width:94px; } }
+  [hidden] { display:none!important; }
+  .btn:focus-visible,button:focus-visible,input:focus-visible,a:focus-visible { outline:3px solid #f6d582; outline-offset:3px; }
+  #stick { bottom:calc(20px + env(safe-area-inset-bottom,0px)); }
+  #a { bottom:calc(94px + env(safe-area-inset-bottom,0px)); }
+  #x { bottom:calc(24px + env(safe-area-inset-bottom,0px)); }
+  #c { bottom:calc(104px + env(safe-area-inset-bottom,0px)); }
+  #name-form { position:fixed; z-index:20; top:max(84px,15vh); left:50%; transform:translateX(-50%); width:min(420px,calc(100vw - 24px)); max-height:calc(100dvh - 100px); overflow:auto; box-sizing:border-box; padding:20px; background:var(--ink); border:2px solid var(--paper); color:var(--paper); touch-action:pan-y; user-select:text; }
+  #name-form h2 { margin:0 0 16px; font-size:22px; }
+  #name-form label { display:block; margin-bottom:6px; font-size:16px; }
+  #name-form input { box-sizing:border-box; width:100%; padding:12px; border:2px solid var(--sea); background:var(--paper); color:var(--ink); font:20px system-ui; user-select:text; touch-action:auto; }
+  #name-form p { font-size:16px; line-height:1.4; margin:10px 0; }
+  #name-form .actions { display:flex; flex-wrap:wrap; gap:8px; }
+  #name-form button,#name-reopen { min-height:48px; padding:10px 14px; border:1px solid var(--paper); background:var(--paper); color:var(--ink); font:600 16px system-ui; cursor:pointer; touch-action:manipulation; }
+  #name-form button.secondary { background:var(--ink); color:var(--paper); }
+  #name-error { color:#ffcead; }
+  #name-reopen { position:fixed; z-index:21; bottom:calc(12px + env(safe-area-inset-bottom,0px)); left:50%; transform:translateX(-50%); }
+  body[data-text-mode] #x,body[data-text-mode] #c,body[data-text-mode] #bike,body[data-text-mode] #map { display:none; }
+  body[data-text-mode="form"] #pad { display:none; }
+  body[data-text-mode="form"] #canvas { opacity:0; }
+  @media (prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; animation:none!important; } }
+  @media (max-height:480px) { #name-form { top:12px; max-height:calc(100dvh - 24px); } }
+</style>
+</head>
+<body>
+<header id="hub-chrome"><a id="jocs-link" href="#">JOCS</a><div id="hub-profile"></div><button type="button" id="local-games">Partides locals</button></header>
+<div id="owner-info" role="status"><span id="owner-label">Partides locals</span><span id="owner-error"></span><button type="button" id="owner-retry" hidden>Tornar a provar</button><button type="button" id="owner-cancel" hidden>Cancel·lar canvi</button></div>
+<div id="wrap"><canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="0"></canvas></div>
+<div id="loading"><h1>Roda de Berà</h1><div id="bar"><div></div></div><div id="msg">Carregant…</div></div>
+<div id="pad">
+  <div id="stick" role="group" aria-label="Cruceta de moviment"><span class="su">▲</span><span class="sd">▼</span><span class="sl">◀</span><span class="sr">▶</span><div id="knob"></div></div>
+  <button type="button" class="btn" id="a" aria-label="Confirmar o triar lletra" data-key="F1" data-code="112">A</button>
+  <button type="button" class="btn" id="x" aria-label="Atacar" data-key="x" data-code="88">⚔</button>
+  <button type="button" class="btn" id="c" aria-label="Escut" data-key="c" data-code="67">🛡</button>
+  <button type="button" class="btn" id="menu" data-key="Escape" data-code="27">Menú</button>
+  <button type="button" class="btn" id="bike" aria-label="Canviar vehicle" data-key="b" data-code="66">🚲</button>
+  <button type="button" class="btn" id="map" data-key="m" data-code="77">Mapa</button>
+  <button type="button" class="btn" id="vista" aria-label="Veure més tros del poble" data-key="n" data-code="78">🔭</button>
+  <button type="button" class="btn" id="zin" aria-label="Apropar el mapa" data-key="=" data-code="187">+</button>
+  <button type="button" class="btn" id="zout" aria-label="Allunyar el mapa" data-key="-" data-code="189">−</button>
+</div>
+<form id="name-form" hidden aria-labelledby="name-title">
+<h2 id="name-title">Com et dius?</h2><label for="name-value">Nom</label>
+<input id="name-value" type="text" autocomplete="off" enterkeyhint="done" spellcheck="false">
+<p>Fins a 14 lletres. Toca el camp per escriure.</p><p id="name-error" role="status" aria-live="polite"></p>
+<div class="actions"><button type="submit">Fet</button><button type="button" id="name-cancel" class="secondary">Cancel·lar</button><button type="button" id="name-grid" class="secondary">Teclat del joc</button></div>
+</form><button type="button" id="name-reopen" hidden>Escriure el nom</button>
+<script src="net-bridge.js"></script>
+<script src="persist.js"></script>
+<script src="text-input.js"></script>
+<script src="adult.js"></script>
+<script src="hub-bridge.js"></script>
+<script>
+  // A usa F1 (no texto): Z se consume al escribir nombres. SDL lee keyCode y code.
+  const CODES = { ArrowUp:'ArrowUp', ArrowDown:'ArrowDown', ArrowLeft:'ArrowLeft', ArrowRight:'ArrowRight',
+                  F1:'F1', '=':'Equal', '-':'Minus', z:'KeyZ', x:'KeyX', c:'KeyC', m:'KeyM', b:'KeyB', n:'KeyN', Escape:'Escape' };
+  function sendKey(type, key, keyCode) {
+    const ev = new KeyboardEvent(type, { key, code: CODES[key], bubbles: true, cancelable: true });
+    Object.defineProperty(ev, 'keyCode', { get: () => keyCode });
+    Object.defineProperty(ev, 'which', { get: () => keyCode });
+    window.dispatchEvent(ev);
+  }
+  document.querySelectorAll('#pad .btn').forEach(b => {
+    const key = b.dataset.key, code = +b.dataset.code;
+    const down = e => { e.preventDefault(); b.classList.add('on'); sendKey('keydown', key, code); };
+    const up = e => { e.preventDefault(); if (!b.classList.contains('on')) return; b.classList.remove('on'); sendKey('keyup', key, code); };
+    b.addEventListener('pointerdown', down); b.addEventListener('pointerup', up);
+    b.addEventListener('pointercancel', up); b.addEventListener('pointerleave', up);
+    window.addEventListener('blur',()=>{b.classList.remove('on');sendKey('keyup',key,code);});
+  });
+  // cruceta: el ángulo del dedo decide una o dos flechas (8 sectores de 45°)
+  (() => {
+    const st = document.getElementById('stick'), knob = document.getElementById('knob');
+    const KEYS = { up: ['ArrowUp', 38], down: ['ArrowDown', 40], left: ['ArrowLeft', 37], right: ['ArrowRight', 39] };
+    let held = new Set(), pid = null;
+    const set = (want) => {
+      for (const k of held) if (!want.has(k)) sendKey('keyup', KEYS[k][0], KEYS[k][1]);
+      for (const k of want) if (!held.has(k)) sendKey('keydown', KEYS[k][0], KEYS[k][1]);
+      held = want;
+    };
+    const move = (e) => {
+      const r = st.getBoundingClientRect();
+      let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+      const d = Math.hypot(dx, dy), max = r.width / 2 - 20;
+      if (d > max) { dx *= max / d; dy *= max / d; }
+      knob.style.transform = `translate(${dx}px, ${dy}px)`;
+      const want = new Set();
+      if (d > 16) {
+        const a = (Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360;  // 0 = derecha, 90 = abajo
+        const sec = Math.round(a / 45) % 8;
+        if ([7, 0, 1].includes(sec)) want.add('right');
+        if ([1, 2, 3].includes(sec)) want.add('down');
+        if ([3, 4, 5].includes(sec)) want.add('left');
+        if ([5, 6, 7].includes(sec)) want.add('up');
+      }
+      set(want);
+    };
+    st.addEventListener('pointerdown', (e) => { e.preventDefault(); pid = e.pointerId; st.setPointerCapture(pid); move(e); });
+    st.addEventListener('pointermove', (e) => { if (e.pointerId === pid) { e.preventDefault(); move(e); } });
+    const end = (e) => { if (e.pointerId !== pid) return; pid = null; knob.style.transform = ''; set(new Set()); };
+    st.addEventListener('pointerup', end); st.addEventListener('pointercancel', end);
+    window.addEventListener('blur',()=>{pid=null;knob.style.transform='';set(new Set());});
+  })();
+  window.addEventListener('keydown', e => { if ([32, 37, 38, 39, 40].includes(e.keyCode)) e.preventDefault(); });
+  window.addEventListener('roda-ui', e => { if (e.detail && e.detail.type === 'zoom') { if (e.detail.active) document.body.dataset.zoom = '1'; else delete document.body.dataset.zoom; } });
+  window.onload = () => window.focus();
+  const bar = document.querySelector('#bar > div'), msg = document.getElementById('msg');
+  // Puente de red para el juego (src/net.lua): Lua escribe una línea JSON en /dev/rodanet y aquí se
+  // envía con fetch; la respuesta se deja en /tmp/rodanet_<id>.json para que Lua la lea.
+  function setupUi() {
+    let bytes=[];
+    Module.FS_createDevice('/dev','rodaui',()=>null,c=>{
+      if(c===null||c===undefined)return;
+      if(c===10){
+        const raw=new TextDecoder().decode(new Uint8Array(bytes));bytes=[];
+        try{window.RodaUI.receive(JSON.parse(raw));}catch(e){console.warn('rodaui: invalid message');}
+      }else if(bytes.length<16384)bytes.push(c);
+    });
+  }
+  function setupNet() { window.RodaNet.setup(Module); window.RodaPersist.setup(Module); }
+  // Veu del joc (src/tts.lua): Lua escriu una línia JSON a /dev/rodatts i aquí es diu amb la Web Speech API.
+  // Tot és asíncron (speechSynthesis té la seva pròpia cua): el bucle del joc no espera mai.
+  function setupTts() {
+    if (!('speechSynthesis' in window)) return;
+    let buf = [];
+    let voices = [];
+    const loadVoices = () => { voices = window.speechSynthesis.getVoices(); };
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+    const pick = (lang) => voices.find(v => v.lang === lang) || voices.find(v => v.lang && v.lang.startsWith(lang.slice(0, 2)));
+    const run = (line) => {
+      let m;
+      try { m = JSON.parse(line); } catch (e) { return; }
+      if (m.cmd === 'stop') { window.speechSynthesis.cancel(); return; }
+      if (m.cmd !== 'say' || !m.text) return;
+      if (m.interrupt) window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(String(m.text).slice(0, 600));
+      u.lang = m.lang || 'ca-ES';
+      // veu d'home per als personatges masculins (m.voice = 'm'): una veu del sistema que ho sembli pel nom; si
+      // no n'hi ha (Android sol tenir-ne una per idioma), la mateixa amb el to més greu
+      const male = /\b(male|home|hombre|man|pau|jordi|enric|pablo|jorge|diego|carlos|miguel|alvaro|álvaro|david|juan|antonio)\b/i;
+      const female = /\b(female|dona|mujer|woman|montserrat|laia|helena|monica|mónica|paulina|lucia|lucía|marisol|elvira)\b/i;
+      let v = null;
+      if (m.voice === 'm') v = voices.find(x => x.lang && x.lang.startsWith(u.lang.slice(0, 2)) && male.test(x.name));
+      if (m.voice === 'f') v = voices.find(x => x.lang && x.lang.startsWith(u.lang.slice(0, 2)) && female.test(x.name));
+      u.pitch = m.voice === 'm' ? (v ? 0.95 : 0.6) : (m.voice === 'f' ? 1.15 : 1);
+      v = v || pick(u.lang);
+      if (v) u.voice = v;
+      u.rate = Math.max(0.5, Math.min(2, +m.rate || 1));
+      u.volume = Math.max(0, Math.min(1, +m.volume || 1));
+      // paraula que s'està dient → Lua (src/ui/dialogue.lua la ressalta); quan acaba, també
+      if (m.id) {
+        const tell = (msg) => { try { if (window.RodaUI) window.RodaUI.send(msg); } catch (e) {} };
+        u.onstart = () => tell({ type: 'tts_word', id: m.id, i: 0, n: u.text.length });
+        u.onboundary = (e) => { if (e.name === 'word' || e.name === undefined) tell({ type: 'tts_word', id: m.id, i: e.charIndex, n: u.text.length }); };
+        u.onend = () => tell({ type: 'tts_end', id: m.id });
+      }
+      setTimeout(() => window.speechSynthesis.speak(u), 0);
+    };
+    try {
+      Module.FS_createDevice('/dev', 'rodatts', () => null, (c) => {
+        if (c === null || c === undefined) return;
+        if (c === 10) { const line = new TextDecoder().decode(new Uint8Array(buf)); buf = []; run(line); }
+        else buf.push(c);
+      });
+    } catch (e) { console.warn('rodatts', e); }
+  }
+  var Module = {
+    locateFile: path => (window.RODA_RELEASE_BASE || './') + path,
+    preRun: [setupNet, setupTts, setupUi],
+    arguments: ['./game.love'],
+    INITIAL_MEMORY: 268435456,
+    printErr: console.error.bind(console),
+    canvas: (() => {
+      const c = document.getElementById('canvas');
+      c.addEventListener('webglcontextlost', e => { msg.textContent = 'S’ha perdut el context gràfic: torna a carregar la pàgina.'; e.preventDefault(); });
+      return c;
+    })(),
+    setStatus(text) {
+      const m = text && text.match(/\((\d+(\.\d+)?)\/(\d+)\)/);
+      if (m) bar.style.width = (100 * m[1] / m[3]) + '%';
+      if (!text && Module.remainingDependencies === 0) {
+        setTimeout(fit, 50); setTimeout(fit, 500);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('canvas').style.visibility = 'visible';
+        document.getElementById('canvas').focus();
+      }
+    },
+    totalDependencies: 0, remainingDependencies: 0,
+    monitorRunDependencies(left) {
+      this.remainingDependencies = left;
+      this.totalDependencies = Math.max(this.totalDependencies, left);
+      Module.setStatus(left ? 'Preparant (' + (this.totalDependencies - left) + '/' + this.totalDependencies + ')' : '');
+    }
+  };
+  // el lienzo interno sigue al tamaño de la ventana (SDL avisa a LÖVE con love.resize)
+  function fit() {
+    const c = document.getElementById('canvas');
+    const w = Math.round(window.innerWidth), h = Math.round(window.innerHeight);
+    if (c.width !== w || c.height !== h) { c.width = w; c.height = h; window.dispatchEvent(new Event('resize')); }
+  }
+  window.addEventListener('resize', () => setTimeout(fit, 0));
+  window.addEventListener('orientationchange', () => setTimeout(fit, 200));
+  window.onerror = () => { msg.textContent = 'Error en carregar el joc. Torna-ho a provar.'; };
+</script>
+<script src="game.js"></script>
+<script async src="love.js" onload="Love(Module)"></script>
+</body>
+</html>

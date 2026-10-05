@@ -1,0 +1,36 @@
+# generados por tools/ (make maps)
+maps/runtime/
+maps/source/semantic.npz
+build/
+*.love
+__pycache__/
+# ubicación privada de la casa: nunca al repositorio
+home.json
+*.local.json
+tools/web/node_modules/
+maps/source/zones/.history/
+
+# generados
+web/editor/overview.jpg
+cartography/sat/
+cartography/catastro/*.zip
+maps/source/overworld.raw.json
+# casa privada (fitxers privats)
+maps/private/
+# salidas de tools/sat_pipeline.py (regenerables)
+cartography/derived/sat_*
+cartography/derived/roda*.tmx
+cartography/derived/roda_*.tsx
+data/.history/
+
+# releases web (tools/build_web.sh) y copia anidada del repo
+/releases/
+/roda-rpg/
+config/joc.json
+config/joc.json.*
+assets/runtime/minimap.png
+assets/runtime/minimap_hd.jpg
+casa_privada*.json
+# generats per make maps al kit
+maps/source/*.tmj
+maps/source/*-report.json
