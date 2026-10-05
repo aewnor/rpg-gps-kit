@@ -1,6 +1,6 @@
 # RPG GPS Kit — una aventura 2D de qualsevol poble
 
-[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-☕-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://www.buymeacoffee.com/aewnor)
+[![Convida'm a un cafè](https://img.shields.io/badge/Convida'm%20a%20un%20caf%C3%A8-PayPal-0070BA?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/serfigavilan)
 
 Kit per crear un joc d'aventura cenital (exploració a l'estil Pokémon Vermell/Blau, combat a l'estil Zelda) **a
 partir d'unes coordenades GPS**. Els carrers, les places, els edificis, les botigues, les escoles, les platges i
@@ -44,7 +44,7 @@ joc funciona igual amb les frases fixes.
 
 ## Dóna suport
 
-Si el kit et serveix, pots convidar-me a un cafè: **https://www.buymeacoffee.com/aewnor** ☕
+Si el kit et serveix, pots convidar-me a un cafè: **https://paypal.me/serfigavilan** ☕
 
 ## Llicència i crèdits
 
