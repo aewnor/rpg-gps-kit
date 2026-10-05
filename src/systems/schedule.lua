@@ -69,6 +69,18 @@ function S.kind_of_friend(f)
   return 'kid'
 end
 
+-- minuts que falten perquè un personatge tancat (a casa o «closed») torni a ser al seu lloc; nil si no hi torna
+-- en 8 dies. Per a l'opció «Esperar» i l'avís «tancat fins a les…» de la brúixola.
+function S.next_open(kind, clock, day)
+  local c, d = (clock or 0) % 1440, day or 1
+  local m0 = math.ceil(c / 5) * 5                       -- (els horaris van de 5 en 5 minuts)
+  for m = m0, m0 + 8 * 1440, 5 do
+    local p = S.place(kind, m % 1440, d + math.floor(m / 1440))
+    if p ~= 'home' and p ~= 'closed' then return m - c end
+  end
+  return nil
+end
+
 -- llocs on no es veu el personatge al carrer (a casa o tancat): a dins de casa seva, si en té
 function S.hidden(place) return place == 'home' or place == 'closed' end
 

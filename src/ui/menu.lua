@@ -30,6 +30,7 @@ function Menu:items()
     { 'Continuar', function() g:close_menu() end },
     { 'Desar partida', function() g:save_game(true) end },
     { 'Personatge i equip', function() self.screen = 'character'; self.back = 'pause' end },
+    { 'Esperar (passar el temps)', function() self:open_wait() end },
     { 'Diari de missions', function() g:open_journal(true) end },
     { 'Quadern de llocs', function() self.screen = 'notebook'; self.back = 'pause' end },
     { 'Aspecte', function() self:open_skins() end },
@@ -62,6 +63,30 @@ function Menu:open_actions()
     end },
     { 'Ràdio de butxaca', function() require('src.systems.radio').open(g) end },
   })
+end
+
+-- «Esperar»: fa passar el temps (src/systems/rest.lua Rest.wait), p. ex. si la missió és en un lloc tancat de nit
+function Menu:open_wait()
+  local g = self.game
+  local w, st = g.scene, g.state
+  if not (w and st and w.player) then return end
+  local Daylight = require('src.systems.daylight')
+  local function go(minutes)
+    g:close_menu()
+    require('src.systems.rest').wait(w, minutes)
+  end
+  local c = math.floor(st.clock or 600) % 1440
+  local items = {}
+  local closed = w.town and w.town.closed
+  if closed and closed.wait and closed.wait > 0 then
+    items[#items + 1] = { 'Fins que obri (' .. Daylight.label(closed.at) .. ')',
+                          function() go(closed.wait) end }
+  end
+  items[#items + 1] = { 'Una hora', function() go(60) end }
+  items[#items + 1] = { 'Tres hores', function() go(180) end }
+  items[#items + 1] = { 'Fins al matí (8:00)', function() go((480 - c) % 1440) end }
+  items[#items + 1] = { 'Fins a la nit (21:00)', function() go((1260 - c) % 1440) end }
+  g:open_list('Esperar · ara són les ' .. Daylight.label(c), items)
 end
 
 -- arbre d'encanteris (src/systems/magic.lua): els coneguts es poden triar; els altres diuen el nivell que cal

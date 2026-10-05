@@ -509,6 +509,20 @@ function Town.update(w, dt)
       T.text = s.text
       T.step_type, T.radius = s.type, s.radius
       T.inside = s.inside
+      -- parlar amb un servei tancat (de nit, o l'escola el cap de setmana): avís i hora d'obrir
+      local sid = (s.type == 'talk' or s.type == 'deliver' or s.type == 'event') and s.target
+                  and s.target:match('^service:(.+)$')
+      T.closed = sid and Town.closed_info(g, sid) or nil
+      if T.closed then
+        local near = (tgt and w.id == 'overworld' and (tgt.x - b.x) ^ 2 + (tgt.y - b.y) ^ 2 < 140 * 140)
+                     or (w.id ~= 'overworld' and w.id:find(sid, 1, true) ~= nil)
+        local key = sid .. ':' .. (st.day or 1) .. ':' .. (T.closed.at or 0)
+        if near and T.closed_told ~= key then
+          T.closed_told = key
+          w.hud:toast(T.closed.label .. ' és tancat ara. ' .. T.closed.when ..
+                      '. Al menú de pausa pots triar «Esperar».', 6, true)
+        end
+      end
       Missions.tick(defs, st, Town.hooks(w))   -- tenir un objecte, arribar a un nivell
       if tgt and w.id == 'overworld' and s.type == 'goto' then
         local r = s.radius or 32
@@ -529,6 +543,25 @@ function Town.update(w, dt)
     w.pending_say = nil
     w.dialogue:show(p.who, p.pages)
   end
+end
+
+-- servei tancat ara? → { label, wait (minuts), at (rellotge), when ("Obre a les 8:00", "Obre demà a les 8:00") }
+function Town.closed_info(g, id)
+  local spec = require('src.systems.services').spec(g, id)
+  local st = g.state
+  if not (spec and st) then return nil end
+  local kind = spec.runtime and 'teacher' or 'service'   -- (la mestra: horari d'escola; la resta, 7:30–21:30)
+  if not Schedule.hidden(Schedule.place(kind, st.clock, st.day)) then return nil end
+  local wait = Schedule.next_open(kind, st.clock, st.day)
+  local info = { label = spec.label or id, wait = wait }
+  if not wait then info.when = 'Avui no obre'; return info end
+  local total = math.floor((st.clock or 0) + wait + 0.5)
+  info.at = total % 1440
+  local hhmm = string.format('%d:%02d', math.floor(info.at / 60), info.at % 60)
+  local days = math.floor(total / 1440)
+  info.when = days == 0 and ('Obre a les ' .. hhmm) or days == 1 and ('Obre demà a les ' .. hhmm)
+              or ('Obre d\'aquí a ' .. days .. ' dies, a les ' .. hhmm)
+  return info
 end
 
 -- on ha de ser ara: un encàrrec (src/systems/errands.lua) si en té i hi ha el lloc, si no l'horari
@@ -1159,7 +1192,7 @@ function Town.draw_hud(w)
   local c = Missions.CAT_COLOR[T.cat or 'nav']
   local tgt = T.target
   local b = w.player.body
-  local text = T.text
+  local text = T.closed and ('Tancat. ' .. T.closed.when .. ' · Menú: Esperar') or T.text
   local x0, y0 = 206, 202            -- a baix a la dreta: no tapa els avisos ni la vida
   love.graphics.setColor(0.12, 0.10, 0.14, 0.78)
   love.graphics.rectangle('fill', x0, y0, 112, 34, 4)

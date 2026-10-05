@@ -267,6 +267,19 @@ function Rest.sleep(w)
   return true
 end
 
+-- «Esperar» (menú de pausa): passa `minutes` de rellotge amb la mateixa fosa de dormir, sense curar
+function Rest.wait(w, minutes)
+  if w.rest_fx or not (minutes and minutes > 0) then return false end
+  w.rest_fx = { t = 0, applied = false, wait = minutes }
+  return true
+end
+
+local function apply_wait(w, minutes)
+  Daylight.skip(w.state, minutes)
+  Rest.refresh_npcs(w)
+  if w.game and w.game.save_game then pcall(w.game.save_game, w.game, false) end
+end
+
 local function apply_sleep(w)
   local st = w.state
   st.hp = st.max_hp
@@ -285,10 +298,11 @@ function Rest.update(w, dt)
   fx.t = fx.t + dt
   if not fx.applied and fx.t >= Rest.FADE_OUT then
     fx.applied = true
-    apply_sleep(w)
+    if fx.wait then apply_wait(w, fx.wait) else apply_sleep(w) end
   end
   if fx.t >= Rest.FADE_OUT + Rest.HOLD + Rest.FADE_IN then
     w.rest_fx = nil
+    if fx.wait then toast(w, 'Ha passat el temps. Són les ' .. Daylight.label(w.state.clock) .. '.', 4); return true end
     toast(w, 'Has dormit 8 hores: ' .. Daylight.label(w.state.clock) .. '. Vida i MP al màxim!', 4)
   end
   return true
@@ -306,7 +320,7 @@ function Rest.draw(w)
   love.graphics.rectangle('fill', 0, 0, 320, 240)
   if a > 0.5 then
     local n = 1 + math.floor(t * 2) % 3
-    local z = 'Z' .. ('z'):rep(n) .. '…'
+    local z = fx.wait and ('Esperant' .. ('.'):rep(n)) or ('Z' .. ('z'):rep(n) .. '…')
     local f = w.game.font
     love.graphics.setColor(0.8, 0.85, 1, (a - 0.5) * 2)
     love.graphics.print(z, math.floor(160 - f:getWidth(z) / 2), 112)

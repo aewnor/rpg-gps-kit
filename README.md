@@ -50,7 +50,8 @@ Si el kit et serveix, pots convidar-me a un cafè: **https://paypal.me/serfigavi
 
 - Dades de mapa © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright), ODbL 1.0: cal citar-ho
   als crèdits del joc que en facis (el joc ja ho mostra).
-- Codi, gràfics generats i música: vegeu [`docs/credits.md`](docs/credits.md).
+- Codi, gràfics generats i música: [GNU GPL v3](LICENSE). Pots fer servir, modificar i distribuir el kit; si distribueixes
+  un joc fet amb ell, comparteix-ne també el codi sota la mateixa llicència. Crèdits de tercers: [`docs/credits.md`](docs/credits.md).
 
 ---
 
