@@ -128,11 +128,11 @@ function Menu:open_slot(slot)
   local items = {}
   for id, n in pairs(st.inventory) do
     local d = g.items[id]
-    if type(d) == 'table' and Rpg.slot_of(d) == slot then
+    if type(d) == 'table' and Rpg.fits(d, slot) then
       local lock = (d.min_level or 1) > st.char_level and ('  [Nv' .. d.min_level .. ']') or ''
       local stat = (d.attack and ('  At+' .. d.attack) or '') .. (d.defense and ('  Df+' .. d.defense) or '')
       items[#items + 1] = { (st.equipment[slot] == id and '> ' or '  ') .. d.name .. stat .. lock, function()
-        local ok, why = Rpg.equip(st, g.items, id)
+        local ok, why = Rpg.equip(st, g.items, id, slot)
         g:close_menu()
         g.hud:toast(ok and ('Equipat: ' .. d.name) or why, 2)
       end, sprite=d.sprite }

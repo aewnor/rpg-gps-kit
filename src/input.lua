@@ -6,7 +6,7 @@ local KEYS = {
   up = { 'up', 'w' }, down = { 'down', 's' }, left = { 'left', 'a' }, right = { 'right', 'd' },
   confirm = { 'f1', 'z', 'return', 'space', 'kpenter' }, cancel = { 'escape', 'backspace' },
   attack = { 'x' }, shield = { 'c', 'k', 'lshift' }, pause = { 'escape', 'p' },
-  map = { 'm', 'tab' }, debug = { 'f3' }, bike = { 'b' }, horn = { 'h' }, journal = { 'j' },
+  map = { 'm', 'tab' }, debug = { 'f3' }, bike = { 'b' }, horn = { 'h' }, journal = { 'j' }, inventory = { 'i' }, swap = { 'r' },
   spell = { 'v', 'l' }, spell_next = { 'e' }, spell_prev = { 'q' }, heal = { 'g' },
   zoom_in = { '=', '+', 'kp+' }, zoom_out = { '-', 'kp-' }, view = { 'n' },   -- vista allunyada del món (src/scenes/world_scene.lua)
 }

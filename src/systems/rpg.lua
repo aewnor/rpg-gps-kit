@@ -11,7 +11,7 @@
 local Rpg = {}
 
 Rpg.SLOTS = { 'weapon', 'shield', 'clothes', 'armor', 'helmet' }
-Rpg.SLOT_NAME = { weapon = 'Arma', shield = 'Escut', clothes = 'Roba', armor = 'Armadura', helmet = 'Casc' }
+Rpg.SLOT_NAME = { weapon = 'Arma', shield = 'Mà esquerra (escut o bastó)', clothes = 'Roba', armor = 'Armadura', helmet = 'Casc' }
 Rpg.BASE = { attack = 10, defense = 5, magic = 5, mp = 10 }
 Rpg.PER_LEVEL = { attack = 3, defense = 2, hp = 2, magic = 2, mp = 3 }
 Rpg.MAX_MP = 40
@@ -41,6 +41,15 @@ function Rpg.ensure(st)
   return st
 end
 
+-- la mà esquerra (ranura «shield») porta un escut o un bastó màgic: escut+espasa, escut+bastó o bastó+espasa
+local function is_staff(def) return def ~= nil and def.kind == 'weapon' and (def.magic or 0) > 0 end
+Rpg.is_staff = is_staff
+function Rpg.fits(def, slot)
+  if not def then return false end
+  if def.kind == slot then return true end
+  return slot == 'shield' and is_staff(def)
+end
+
 local function slot_of(def)
   if not def then return nil end
   for _, s in ipairs(Rpg.SLOTS) do if def.kind == s then return s end end
@@ -56,7 +65,7 @@ function Rpg.stats(st, items)
   for _, s in ipairs(Rpg.SLOTS) do
     local d = items[st.equipment[s] or '']
     if d then
-      bonus_atk = bonus_atk + (d.attack or 0)
+      if not (s == 'shield' and d.kind ~= 'shield') then bonus_atk = bonus_atk + (d.attack or 0) end   -- (bastó a l'esquerra: només màgia)
       bonus_def = bonus_def + (d.defense or 0)
     end
   end
@@ -68,14 +77,42 @@ function Rpg.stats(st, items)
 end
 
 -- equipar con requisito de nivel; sustituye lo que hubiera en la ranura. Devuelve ok, motivo
-function Rpg.equip(st, items, id)
+function Rpg.equip(st, items, id, slot)
   local d = items[id]
-  local slot = slot_of(d)
-  if not slot then return false, 'no es pot equipar' end
+  slot = slot or slot_of(d)
+  if not slot or not Rpg.fits(d, slot) then return false, 'no es pot equipar' end
   if (st.inventory[id] or 0) <= 0 then return false, 'no el tens' end
   if (d.min_level or 1) > st.char_level then return false, 'Requereix nivell ' .. d.min_level end
+  -- un sol bastó no pot anar a les dues mans: el treu de l'altra
+  local other = slot == 'shield' and 'weapon' or slot == 'weapon' and 'shield' or nil
+  if other and st.equipment[other] == id and (st.inventory[id] or 0) < 2 then st.equipment[other] = nil end
   st.equipment[slot] = id
   return true
+end
+
+-- canvi ràpid d'arma (tecla R / botó 🔄): espasa i bastó a les dues mans → els intercanvia; si no, alterna la mà dreta
+-- entre la millor espasa i el millor bastó que tinguis. Retorna el text de l'avís o nil si no hi ha res a canviar.
+function Rpg.swap(st, items)
+  local eq = st.equipment
+  local w, l = items[eq.weapon or ''], items[eq.shield or '']
+  if w and l and l.kind == 'weapon' then
+    eq.weapon, eq.shield = eq.shield, eq.weapon
+  else
+    local want_staff = not is_staff(w)
+    local best, bv
+    for id, n in pairs(st.inventory or {}) do
+      local d = items[id]
+      if n > 0 and type(d) == 'table' and d.kind == 'weapon' and is_staff(d) == want_staff
+         and (d.min_level or 1) <= (st.char_level or 1) and id ~= eq.shield then
+        local v = (d.attack or 0) + (d.magic or 0)
+        if not bv or v > bv then best, bv = id, v end
+      end
+    end
+    if not best then return nil end
+    eq.weapon = best
+  end
+  local a, b = items[eq.weapon or ''], items[eq.shield or '']
+  return 'Ara portes: ' .. (a and a.name or 'les mans buides') .. (b and (' + ' .. b.name) or '')
 end
 
 function Rpg.unequip(st, slot) st.equipment[slot] = nil end

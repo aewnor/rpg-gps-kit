@@ -37,7 +37,7 @@ CATS = {'nav': 'Orientació', 'social': 'Família i amics', 'safety': 'Seguretat
 ROLES = ['amiga', 'amic', 'avia', 'avi', 'tieta', 'tiet', 'cosina', 'cosi']
 NEAREST = ['crosswalk', 'light', 'recycling', 'bus_stop']
 BOSSES = ['boss:dragon']
-EVENTS = ['wallet_started', 'wallet_returned', 'parent_pare', 'parent_mare', 'fish_caught', 'fish_species_5',
+EVENTS = ['wallet_started', 'magic_practice', 'wallet_returned', 'parent_pare', 'parent_mare', 'fish_caught', 'fish_species_5',
           'ally_help', 'ally_help_3', 'ally_found', 'wood_3', 'crafted', 'farm_pinso', 'animal_fed', 'animals_3',
           'egg']   # + home_<id personatge>
 PLACEHOLDERS = ['name', 'id', 'role', 'parents', 'parent1', 'parent2', 'name2', 'id2', 'parents2',
@@ -53,7 +53,7 @@ STEP_TYPES = {
     'enter': (['scene'], [], 'entrar a una escena (cova, interior)'),
     'level': (['count'], [], 'arribar al nivell count'),
     'defeat': (['target'], [], 'vèncer un enemic final (boss:dragon)'),
-    'event': (['event'], [], "esdeveniment del món: wallet_started, wallet_returned, parent_pare, parent_mare, fish_caught (has pescat un peix), fish_species_5 (5 espècies al quadern), home_<id> (entrar a casa d'un personatge)"),
+    'event': (['event'], [], "esdeveniment del món: wallet_started, wallet_returned, parent_pare, parent_mare, fish_caught (has pescat un peix), fish_species_5 (5 espècies al quadern), home_<id> (entrar a casa d'un personatge), magic_practice (un encanteri a prop de la mestra, proves del pati)"),
     'crosswalk': ([], ['count'], 'creuar count passos de vianants'),
     'light': ([], ['count'], 'creuar count semàfors en verd'),
     'recycle': ([], ['count'], 'reciclar count vegades'),

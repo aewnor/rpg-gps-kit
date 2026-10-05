@@ -32,8 +32,12 @@ Magic.REGEN_EVERY = 1.5
 local DIRS = { down = { 0, 1 }, up = { 0, -1 }, left = { -1, 0 }, right = { 1, 0 } }
 
 function Magic.has_staff(st, items)
-  local w = items[st.equipment and st.equipment.weapon or '']
-  return w ~= nil and (w.magic or 0) > 0
+  local eq = st.equipment or {}
+  for _, id in ipairs({ eq.weapon or '', eq.shield or '' }) do   -- (el bastó pot anar a qualsevol de les dues mans)
+    local w = items[id]
+    if w ~= nil and (w.kind == nil or w.kind == 'weapon') and (w.magic or 0) > 0 then return true end
+  end
+  return false
 end
 
 function Magic.total(st, items)

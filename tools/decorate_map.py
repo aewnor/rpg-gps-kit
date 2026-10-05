@@ -299,9 +299,10 @@ def parkings(m, osm):
     for i, f in enumerate(OVERRIDES.get('extra_features', [])):
         if f.get('type') == 'parking':
             x0, y0, x1, y1 = f['rect']
-            areas.append((f'extra{i}', (y0, x0, np.ones((y1 - y0 + 1, x1 - x0 + 1), bool)), f.get('surface')))
-    areas = [a if len(a) == 3 else (a[0], a[1], None) for a in areas]
-    for wid, (y0, x0, msk), surface in areas:
+            areas.append((f'extra{i}', (y0, x0, np.ones((y1 - y0 + 1, x1 - x0 + 1), bool)), f.get('surface'),
+                          bool(f.get('caravans'))))
+    areas = [a if len(a) == 4 else (a[0], a[1], None, False) for a in areas]
+    for wid, (y0, x0, msk), surface, caravans in areas:
         pk = set()
         for cy, cx in zip(*np.nonzero(msk)):
             x, y = x0 + cx, y0 + cy
@@ -317,6 +318,20 @@ def parkings(m, osm):
         # Colores 1-14: 4 clásicos + 8 modelos car2 + 2 furgonetas van2 (world_scene draw_car)
         horiz = msk.shape[0] > msk.shape[1] * 1.2
         prng = random.Random(wid)
+        if caravans:       # pàrquing d'autocaravanes: en files verticals de 3 caselles, amb un carrer entre files
+            for cy, cx in zip(*np.nonzero(msk)):
+                x, y = x0 + cx, y0 + cy
+                if x % 3 or (y - y0) % 4 or prng.random() > 0.7:
+                    continue
+                cells = [(x, y + k) for k in range(3)]
+                if not all(c in pk and m.free(c[0], c[1], strict=False) for c in cells):
+                    continue
+                for cx_, cy_ in cells:
+                    m.coll[cy_, cx_] = SOLID
+                    m.placed[cy_, cx_] = True
+                m.obj('prop', x * 16 + 8, (y + 2) * 16 + 8, {'sprite': prng.choice(('caravan_a', 'caravan_b', 'caravan_c'))})
+                n_cars += 1
+            continue
         for cy, cx in zip(*np.nonzero(msk)):
             x, y = x0 + cx, y0 + cy
             if horiz:

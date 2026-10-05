@@ -45,7 +45,10 @@ local function wanted_dir(self, act)
 end
 
 function Player:weapon(ctx) return ctx.state.equipment.weapon and ctx.items[ctx.state.equipment.weapon] end
-function Player:shield(ctx) return ctx.state.equipment.shield and ctx.items[ctx.state.equipment.shield] end
+function Player:shield(ctx)   -- (la mà esquerra pot portar un bastó: només compta si és un escut)
+  local d = ctx.state.equipment.shield and ctx.items[ctx.state.equipment.shield]
+  return d and d.kind == 'shield' and d or nil
+end
 
 -- ctx: { map, blockers, state, items, sfx }
 function Player:update(dt, act, ctx)

@@ -10,9 +10,10 @@
   :root { --ink:#1f1a24; --paper:#f6f1e3; --terra:#d56b4b; --sea:#2f9eb0; }
   html, body { margin:0; height:100%; background:var(--ink); color:var(--paper); overflow:hidden;
     font-family: system-ui, sans-serif; touch-action:none; -webkit-user-select:none; user-select:none; }
-  #wrap { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; }
+  /* el joc comença sota la barra del hub (abans la barra tapava els cors i la vida) */
+  #wrap { position:fixed; left:0; right:0; bottom:0; top:var(--game-top,0px); display:flex; align-items:center; justify-content:center; }
   canvas#canvas { visibility:hidden; image-rendering:pixelated; image-rendering:crisp-edges;
-    width:100vw; height:100vh; outline:none; }
+    width:100%; height:100%; outline:none; }
   #loading { position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; }
   #loading h1 { margin:0; font-size:28px; letter-spacing:.04em; }
   #bar { width:min(320px, 70vw); height:10px; border:2px solid var(--paper); }
@@ -41,6 +42,8 @@
   #vista { right:144px; top:76px; width:56px; height:48px; border-radius:10px; font-size:22px; }
   body[data-zoom="1"] #vista { display:none; }
   #bike { left:12px; top:76px; width:52px; height:44px; border-radius:10px; }
+  #inv { left:12px; top:128px; width:52px; height:44px; border-radius:10px; font-size:22px; }
+  #swap { left:12px; top:180px; width:52px; height:44px; border-radius:10px; font-size:22px; }
   #hub-chrome { position:fixed; z-index:10; top:env(safe-area-inset-top,0px); left:0; right:0; display:flex; gap:8px; align-items:center; padding:6px 10px; background:var(--ink); font-size:16px; }
   #hub-chrome a,#hub-chrome>button { min-height:48px; box-sizing:border-box; display:flex; align-items:center; padding:8px; background:var(--ink); border:1px solid var(--paper); color:var(--paper); text-decoration:none; font:600 16px system-ui; cursor:pointer; }
   #hub-profile { margin-left:auto; }
@@ -67,7 +70,7 @@
   #name-form button.secondary { background:var(--ink); color:var(--paper); }
   #name-error { color:#ffcead; }
   #name-reopen { position:fixed; z-index:21; bottom:calc(12px + env(safe-area-inset-bottom,0px)); left:50%; transform:translateX(-50%); }
-  body[data-text-mode] #x,body[data-text-mode] #c,body[data-text-mode] #bike,body[data-text-mode] #map { display:none; }
+  body[data-text-mode] #x,body[data-text-mode] #c,body[data-text-mode] #bike,body[data-text-mode] #inv,body[data-text-mode] #swap,body[data-text-mode] #map { display:none; }
   body[data-text-mode="form"] #pad { display:none; }
   body[data-text-mode="form"] #canvas { opacity:0; }
   @media (prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none!important; animation:none!important; } }
@@ -86,6 +89,8 @@
   <button type="button" class="btn" id="c" aria-label="Escut" data-key="c" data-code="67">🛡</button>
   <button type="button" class="btn" id="menu" data-key="Escape" data-code="27">Menú</button>
   <button type="button" class="btn" id="bike" aria-label="Canviar vehicle" data-key="b" data-code="66">🚲</button>
+  <button type="button" class="btn" id="inv" aria-label="Inventari" data-key="i" data-code="73">🎒</button>
+  <button type="button" class="btn" id="swap" aria-label="Canviar d'arma" data-key="r" data-code="82">🔄</button>
   <button type="button" class="btn" id="map" data-key="m" data-code="77">Mapa</button>
   <button type="button" class="btn" id="vista" aria-label="Veure més tros del poble" data-key="n" data-code="78">🔭</button>
   <button type="button" class="btn" id="zin" aria-label="Apropar el mapa" data-key="=" data-code="187">+</button>
@@ -248,10 +253,14 @@
   // el lienzo interno sigue al tamaño de la ventana (SDL avisa a LÖVE con love.resize)
   function fit() {
     const c = document.getElementById('canvas');
-    const w = Math.round(window.innerWidth), h = Math.round(window.innerHeight);
+    const bar = document.getElementById('hub-chrome');
+    const top = bar && getComputedStyle(bar).display !== 'none' ? Math.ceil(bar.getBoundingClientRect().bottom) : 0;
+    document.documentElement.style.setProperty('--game-top', top + 'px');
+    const w = Math.round(window.innerWidth), h = Math.round(window.innerHeight - top);
     if (c.width !== w || c.height !== h) { c.width = w; c.height = h; window.dispatchEvent(new Event('resize')); }
   }
   window.addEventListener('resize', () => setTimeout(fit, 0));
+  window.addEventListener('load', () => { setTimeout(fit, 50); setTimeout(fit, 1500); });
   window.addEventListener('orientationchange', () => setTimeout(fit, 200));
   window.onerror = () => { msg.textContent = 'Error en carregar el joc. Torna-ho a provar.'; };
 </script>

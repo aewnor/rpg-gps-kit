@@ -464,8 +464,14 @@ end
 -- encanteri (tecla V): el que hi ha triat (Q/E per canviar-lo)
 function World:cast_spell()
   local st, pl = self.state, self.player
+  local MQ = require('src.systems.magic_quest')
+  if Magic.has_staff(st, self.game.items) then     -- (el bastó sol no fa màgia: cal aprendre'n, src/systems/magic_quest.lua)
+    local ok, why0 = MQ.can_cast(self)
+    if not ok then self.hud:toast(why0, 3, true); return end
+  end
   local out, why = Magic.cast(st, self.game.items, st.spell, pl.body.x, pl.body.y - 8, pl.facing)
   if not out then self.hud:toast(why, 1.5); return end
+  MQ.on_cast(self)
   if out.heal then
     self.game.audio.play('heal')
     self.fx:preset('levelup', pl.body.x, pl.body.y - 10, 10)
@@ -674,7 +680,8 @@ function World:interact()
   local near = function(x, y, r) return (x - fx) ^ 2 + (y - fy) ^ 2 < r * r end
   for _, n in ipairs(self.npcs) do
     if n.hidden and n.props.service and near(n.body.x, n.body.y - 2, 16) then
-      self.hud:toast('Tancat. Obre cada dia a les 7:30.', 2.5)   -- de nit els serveis tanquen
+      local ci = n.props.service_id and Town.closed_info(self.game, n.props.service_id)   -- de nit els serveis tanquen
+      self.hud:toast('Tancat. ' .. (ci and ci.when or 'Obre cada dia a les 7:30') .. '. Al menú pots triar «Esperar».', 3)
       return true
     end
     if not n.hidden and near(n.body.x, n.body.y - 2, 16) then
@@ -694,7 +701,9 @@ function World:interact()
       elseif n.props.ai then
         self:ai_talk(n, 'Hola!')
       elseif n.props.say then
-        self:say_text(n.props.say_name, n.props.say, after)
+        local Chat = require('src.systems.chat')
+        -- veïns de les cases: després de la seva frase, preguntes per triar (src/systems/chat.lua)
+        self:say_text(n.props.say_name, n.props.say, Chat.applies(self, n) and function() Chat.open(self, n, after) end or after)
       else
         self:say(n.props.dialogue, after)
       end
@@ -714,6 +723,7 @@ function World:interact()
   for _, s in ipairs(self.signs) do
     if near(s.x, s.y, 12) then
       if s.props.display then require('src.systems.services').display(self, s.props)
+      elseif s.props.book and require('src.systems.magic_quest').on_book(self, s) then   -- buscant el Llibre de Màgia
       elseif s.props.say then self:say_text(nil, s.props.say) else self:say(s.props.text) end
       return true
     end
@@ -1378,6 +1388,12 @@ function World:update(dt, act)
     self.hud:toast(self.zoom_out and 'Vista allunyada (N per tornar)' or 'Vista normal', 1.2)
   end
   if pressed.journal then g:open_journal(); return end
+  if pressed.inventory then g:open_menu(); if g.menu then g.menu:open_inventory() end; return end
+  if pressed.swap then
+    local msg = require('src.systems.rpg').swap(self.state, g.items)
+    self.hud:toast(msg or 'No tens cap altra arma per canviar', 2)
+    if msg then g.audio.play('confirm') end
+  end
   if pressed.debug then g.debug = not g.debug end
 
   self.state.sim_time = self.state.sim_time + dt
@@ -1627,7 +1643,8 @@ function World:draw()
   local sprites = g.sprites
   local draw_player = function() pl:draw({ sheet = sprites.player.sheet, quad = sprites.player.quad, diag = sprites.player.diag,
     weapon = g.items[self.state.equipment.weapon] and g:special_sprite(g.items[self.state.equipment.weapon].sprite or 'sword'),
-    shield = g.items[self.state.equipment.shield] and g:special_sprite(g.items[self.state.equipment.shield].sprite or 'shield'),
+    shield = g.items[self.state.equipment.shield] and g.items[self.state.equipment.shield].kind == 'shield'
+             and g:special_sprite(g.items[self.state.equipment.shield].sprite or 'shield') or nil,
     action = sprites.player_action, action_quads = sprites.player_action_quads,
     bike = sprites.player_bike, bike_quads = sprites.player_bike_quads, bike_diag = sprites.player_bike_diag, vehicles = sprites.player_vehicles,
     car = function(x, y, ang)
@@ -1929,7 +1946,8 @@ function World:draw()
         if level >= 0 and self.cam:visible(x - 40, y - 40, 80, 80) then cars[#cars + 1] = { x = x, y = y, ang = ang } end
       end
     end
-    g.daylight:draw(self.state.clock, chunks, cars, { x = pl.body.x, y = pl.body.y, light = self:player_light() }, ox, oy,
+    g.daylight:draw(self.state.clock, chunks, cars, { x = pl.body.x, y = pl.body.y, light = self:player_light(),
+                                                      cone = self:flashlight_angle() }, ox, oy,
       g.theme and g.theme.night_tint, VW, VH)
     if g.weather and pl.body.level >= 0 and not zoomed then g.weather:draw(ox, oy) end
   end
@@ -1947,8 +1965,14 @@ function World:draw()
     love.graphics.draw(self.zcanvas, 0, 0, 0, 0.5, 0.5)
     if g.weather and pl.body.level >= 0 then g.weather:draw(ox, oy) end
   end
-  self.hud:draw(self.state, pl, self.state.equipment.shield ~= nil,
-    Magic.has_staff(self.state, self.game.items))
+  local eq = self.state.equipment or {}
+  local wi, li = g.items[eq.weapon or ''], g.items[eq.shield or '']
+  local staff = Magic.has_staff(self.state, self.game.items)
+  local sp = staff and Magic.BY_ID[self.state.spell or '']
+  self.hud:draw(self.state, pl, (li or {}).kind == 'shield', staff, {
+    weapon = wi and g:special_sprite(wi.sprite or 'sword') or nil,
+    left = li and g:special_sprite(li.sprite or (li.kind == 'shield' and 'shield' or 'staff')) or nil,
+    spell = sp and sp.name or nil })
   if self.boss and self.boss.state == 'fight' then self.hud:boss_bar(self.boss) end
   Town.draw_hud(self)   -- brúixola de la missió activa
   require('src.systems.marker').draw_hud(self)   -- brúixola de la marca del mapa
@@ -2065,6 +2089,15 @@ function World:draw_signs(add, ox, oy)
   end
 end
 
+-- con de la llanterna: rumb cap a on mira el jugador (o el vehicle), si la porta; nil si no
+local FACE_ANG = { right = 0, down = math.pi / 2, left = math.pi, up = -math.pi / 2 }
+function World:flashlight_angle()
+  if (self.state.inventory.llanterna or 0) <= 0 then return nil end
+  local pl = self.player
+  if pl.vehicle and pl.vehicle.angle then return pl.vehicle.angle end
+  return FACE_ANG[pl.facing] or math.pi / 2
+end
+
 -- luz del jugador: más amplia con la llanterna (data/items.json light)
 function World:player_light()
   local l = self.game.items.llanterna
@@ -2090,6 +2123,8 @@ function World:draw_darkness(ox, oy)
   local pr = 70 * self:player_light()
   glow(self.player.body.x - ox, self.player.body.y - 8 - oy, pr, 0.95, 0.9, 0.8)
   glow(self.player.body.x - ox, self.player.body.y - 8 - oy, pr * 0.55, 0.35, 0.33, 0.3)
+  local ca = self:flashlight_angle()
+  if ca then require('src.systems.daylight').cone(self.player.body.x - ox, self.player.body.y - 8 - oy, ca, 150, 1, 0.92, 0.72) end
   for _, sh in ipairs(self.shots.list) do
     if sh.kind == 'gust' then glow(sh.x - ox, sh.y - oy, 22, 0.35, 0.45, 0.5)
     else glow(sh.x - ox, sh.y - oy, 34, 1.0, 0.55, 0.2) end

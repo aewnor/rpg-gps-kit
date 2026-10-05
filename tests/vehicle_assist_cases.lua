@@ -110,6 +110,18 @@ do
   check(s1.x > 480 and math.abs(s1.y - 105) < 6, 'a la cruïlla, amb la dreta segueix recte (' .. math.floor(s1.x) .. ', ' .. math.floor(s1.y) .. ')')
   local s2 = drive2({ { 1, 0, 100 }, { 0, 1, 200 } })
   check(s2.y > 200 and math.abs(s2.x - 395) < 10, 'prement avall a la cruïlla, gira pel carrer que baixa (' .. math.floor(s2.x) .. ', ' .. math.floor(s2.y) .. ')')
+  -- cul-de-sac: la via s'acaba a x = 300; amb la dreta, en arribar al final segueix recte pel camp (no gira en rodó)
+  Roads.set_data({ lines = { { c = 'road', p = { 40, 100, 300, 100 } } } })
+  local st6 = V.new_state('scooter', 'right')
+  local b6 = { x = 60, y = 105, w = 10, h = 8, level = 0 }
+  local miny, maxy = 1e9, -1e9
+  for _ = 1, 400 do
+    st6.lines = Roads.near(b6.x, b6.y, 40, st6.lines)
+    V.update(st6, b6, 1, 0, 1 / 60, open, {})
+    if b6.x > 290 then miny, maxy = math.min(miny, b6.y), math.max(maxy, b6.y) end
+  end
+  check(b6.x > 420 and maxy - miny < 12, 'al final del camí deixa de guiar i continua cap on demanes (' ..
+    math.floor(b6.x) .. ', ' .. math.floor(b6.y) .. ')')
   Roads.set_data(nil)
 end
 print('TOTES LES PROVES DE CONDUCCIÓ ASSISTIDA OK (' .. n_ok .. ')')

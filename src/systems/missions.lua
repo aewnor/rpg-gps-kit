@@ -326,7 +326,10 @@ function M.event(defs, st, kind, data, hooks)
     return M.advance(defs, st, hooks)
   end
   if s.type == 'defeat' and kind == 'defeat' and data.target == s.target then return M.advance(defs, st, hooks) end
-  if s.type == 'event' and kind == 'event' and data.name == s.event then return M.advance(defs, st, hooks) end
+  if s.type == 'event' and kind == 'event' and data.name == s.event then   -- (amb count: cal que passi n vegades)
+    if (s.count or 1) > 1 then return counted() end
+    return M.advance(defs, st, hooks)
+  end
   return nil
 end
 

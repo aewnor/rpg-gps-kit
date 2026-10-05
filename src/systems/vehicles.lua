@@ -193,7 +193,7 @@ local function along(st, li, i, x, y, dir, dist, target, depth)
     end
     if best then return along(st, best.li, best.i, bs[1], bs[2], bdir, dist, target, (depth or 0) + 1) end
   end
-  return x, y, ang, l.c, l.o, li
+  return x, y, ang, l.c, l.o, li, dist   -- (dist > 0: la via s'acaba abans, sense continuació)
 end
 
 -- segueix l'eix de la via (st.lines: trams a prop, de src/systems/roads.lua) que va cap on demanes; nil si no n'hi ha
@@ -228,7 +228,10 @@ local function follow_lines(st, body, target)
   end
   if not best then st.follow = nil; return nil end
   local qx, qy = best.x0 + (best.x1 - best.x0) * bt, best.y0 + (best.y1 - best.y0) * bt
-  local px, py, ang, cls, oneway, li2 = along(st, best.li, best.i, qx, qy, bdir, Vehicles.PURSUIT, target)
+  local px, py, ang, cls, oneway, li2, rest = along(st, best.li, best.i, qx, qy, bdir, Vehicles.PURSUIT, target)
+  -- final del camí (cul-de-sac, entrada d'un pàrquing o d'un camp): deixa de guiar i el vehicle va on demanes
+  -- (abans apuntava al darrer punt de la via: girava en rodó o no et deixava sortir)
+  if rest and rest > Vehicles.PURSUIT * 0.5 then st.follow = nil; return nil end
   -- revolt al davant: frena abans (a 70 px, quant gira la via respecte d'on va ara)
   local a0 = math.atan2((best.y1 - best.y0) * bdir, (best.x1 - best.x0) * bdir)
   local _, _, a2, _, _, li3 = along(st, best.li, best.i, qx, qy, bdir, 70, target)

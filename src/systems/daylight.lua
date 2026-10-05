@@ -87,6 +87,33 @@ function Daylight.new()
   return self
 end
 
+-- con de llum de la llanterna (2026-10-05): textura de 128 × 64 amb el vèrtex a l'esquerra, al mig, i la llum cap a
+-- la dreta (±32°, s'esvaeix amb la distància). Es dibuixa girada cap a on mira el jugador.
+function Daylight.cone_image()
+  if Daylight._cone then return Daylight._cone end
+  local W, H = 128, 64
+  local id = love.image.newImageData(W, H)
+  for y = 0, H - 1 do
+    for x = 0, W - 1 do
+      local dx, dy = x + 0.5, y + 0.5 - H / 2
+      local d = math.sqrt(dx * dx + dy * dy) / W
+      local a = math.abs(math.atan2(dy, dx)) / 0.56
+      local v = math.max(0, 1 - a) ^ 0.8 * math.max(0, 1 - d) ^ 0.9 * math.min(1, d * 6)
+      id:setPixel(x, y, v, v, v, 1)
+    end
+  end
+  Daylight._cone = love.graphics.newImage(id)
+  Daylight._cone:setFilter('linear', 'linear')
+  return Daylight._cone
+end
+
+-- dibuixa el con (mode additiu ja posat): x, y = mans del jugador; ang = rumb; len = llargada en px
+function Daylight.cone(x, y, ang, len, cr, cg, cb)
+  local img = Daylight.cone_image()
+  love.graphics.setColor(cr, cg, cb, 1)
+  love.graphics.draw(img, x, y, ang, len / 128, len / 128, 0, 32)
+end
+
 local function spot(self, x, y, r, cr, cg, cb, k)
   love.graphics.setColor(cr * k, cg * k, cb * k, 1)
   love.graphics.draw(self.glow, x - r, y - r, 0, 2 * r / 64, 2 * r / 64)
@@ -126,6 +153,9 @@ function Daylight:draw(clock, chunks, cars, player, ox, oy, tint, vw, vh)
     end
   end
   if player then spot(self, player.x - ox, player.y - 10 - oy, 34 * (player.light or 1), 0.55, 0.5, 0.42, k) end
+  if player and player.cone then
+    Daylight.cone(player.x - ox, player.y - 10 - oy, player.cone, 120, 0.95 * k, 0.9 * k, 0.7 * k)
+  end
   love.graphics.pop()
   love.graphics.setCanvas(prev)
   love.graphics.setBlendMode('multiply', 'premultiplied')

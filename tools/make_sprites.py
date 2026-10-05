@@ -1265,6 +1265,26 @@ def _parasol(col):
     return spr
 
 
+# autocaravana aparcada (pàrquing d'autocaravanes, map-overrides extra_features «caravans»): vista de dalt, 3 caselles
+def _caravan(stripe, stripe2):
+    spr = Sprite(20, 50)
+    spr.rect(2, 4, 16, 44, 'ink')                                    # contorn
+    spr.rect(3, 5, 14, 42, 'white'); spr.rect(3, 5, 14, 2, 'white2')
+    spr.rect(4, 6, 12, 7, 'sea3'); spr.rect(5, 7, 10, 2, 'sea2')      # parabrisa (davant, a dalt)
+    spr.rect(3, 15, 14, 5, 'white2')                                  # cabina
+    spr.rect(5, 24, 10, 8, 'white3'); spr.rect(6, 25, 8, 6, 'stone2')  # claraboia
+    spr.rect(6, 36, 8, 5, 'white3'); spr.rect(7, 37, 2, 3, 'asph3'); spr.rect(11, 37, 2, 3, 'asph3')   # aire i ventilació
+    spr.vline(3, 20, 46, stripe); spr.vline(16, 20, 46, stripe)       # franges
+    spr.vline(4, 22, 44, stripe2); spr.vline(15, 22, 44, stripe2)
+    for y in (10, 38):                                                # rodes
+        spr.rect(0, y, 2, 5, 'ink'); spr.rect(18, y, 2, 5, 'ink')
+    spr.hline(4, 15, 47, 'stone3')
+    return spr
+
+
+save(_caravan('sea2', 'sea'), 'caravan_a')
+save(_caravan('terra', 'terra2'), 'caravan_b')
+save(_caravan('pine2', 'pine'), 'caravan_c')
 save(_chiringuito(), 'chiringuito')
 save(_parasol('red'), 'parasol_red')
 save(_parasol('sea2'), 'parasol_blue')

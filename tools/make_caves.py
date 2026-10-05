@@ -258,19 +258,21 @@ def make_level(i, L):
     assert (ex, ey) in reach, L['scene']
     up_target = ('overworld', 'spawn_cova_roda_door') if i == 0 else (LEVELS[i - 1]['scene'], 'spawn_from_down')
     # escala amunt a (sx, sy): s'arriba una casella per sota (o al costat si és roca)
-    arrive = next(p for p in ((sx, sy + 1), (sx + 1, sy), (sx - 1, sy), (sx, sy - 1)) if p in reach)
+    # (de costat, el cos del jugador toca la porta en arribar i el torna a enviar a l'altre nivell: millor a sota o
+    # a dues caselles)
+    arrive = next(p for p in ((sx, sy + 1), (sx + 2, sy), (sx - 2, sy), (sx + 1, sy + 1), (sx - 1, sy + 1),
+                              (sx + 1, sy), (sx - 1, sy), (sx, sy - 1)) if p in reach)
     objs = [obj('spawn_entrance', 'spawn', arrive[0], arrive[1], point=True, public=True),
-            obj('spawn_from_down', 'spawn', arrive[0], arrive[1], point=True),
+            obj('spawn_from_up', 'spawn', arrive[0], arrive[1], point=True),     # (qui baixa del nivell de dalt)
             obj('door_up', 'door', sx, sy, 1, 1, target_scene=up_target[0], target_spawn=up_target[1])]
     structs = [(sx, sy, 'o_cave_ladder_up')]
     final = i == len(LEVELS) - 1
     if not final:
-        down_arrive = next(p for p in ((ex, ey + 1), (ex - 1, ey), (ex + 1, ey), (ex, ey - 1)) if p in reach)
+        down_arrive = next(p for p in ((ex, ey + 1), (ex - 2, ey), (ex + 2, ey), (ex - 1, ey + 1), (ex + 1, ey + 1),
+                                       (ex - 1, ey), (ex + 1, ey), (ex, ey - 1)) if p in reach)
         objs += [obj('door_down', 'door', ex, ey, 1, 1, target_scene=LEVELS[i + 1]['scene'], target_spawn='spawn_from_up'),
-                 obj('spawn_from_up', 'spawn', down_arrive[0], down_arrive[1], point=True)]
+                 obj('spawn_from_down', 'spawn', down_arrive[0], down_arrive[1], point=True)]   # (qui torna de baix)
         structs.append((ex, ey, 'o_cave_ladder_down'))
-    else:
-        objs.append(obj('spawn_from_up', 'spawn', arrive[0], arrive[1], point=True))
     # cofres a la sala del final (o la darrera sala), enemics a les sales i pel camí, torxes
     taken = {(sx, sy), (ex, ey), arrive}
     cx, cy = L['rooms'][-1][0], L['rooms'][-1][1]

@@ -62,6 +62,7 @@
   "baston_magic": {"name": "Bastó màgic", "kind": "weapon", "sprite": "staff", "attack": 4, "magic": 6, "rarity": "legend",
                    "damage": 1, "reach": 16, "windup": 0.1, "active": 0.1, "recovery": 0.2, "stamina_cost": 8,
                    "desc": "Amb el bastó equipat pots fer encanteris (tecla V; Q/E canvien d'encanteri)."},
+  "llibre_magia": {"name": "Llibre de Màgia", "kind": "quest", "sprite": "notebook", "desc": "Un llibre antic amb els secrets del bastó màgic. Porta'l a la mestra."},
   "cristall_drac": {"name": "Cristall del Drac", "kind": "quest", "sprite": "crystal",
                     "desc": "Encaixa a la roca segellada del cim."},
   "corona_drac": {"name": "Corona del Drac", "kind": "quest", "desc": "El drac ja no farà por a ningú."},
