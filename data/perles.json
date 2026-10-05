@@ -2,12 +2,68 @@
  "_doc": "Les 7 Perles del Drac (src/systems/perles.lua). Cada perla és a prop d'un lloc real: 'landmark:<id>' (data/landmarks.json, davant la porta) o 'area:<nom>' (data/streets.json). El joc busca la casella transitable més propera al punt + offset (caselles). En reunir-les totes dona l'objecte 'premi' i l'equipa.",
  "premi": "armadura_drac",
  "perles": [
-  {"id": "perla_1", "near": "landmark:arc_de_bera", "offset": [0, 2], "pista": "On els romans van fer un arc de pedra, a la Via Augusta."},
-  {"id": "perla_2", "near": "landmark:pedrera_elies", "offset": [0, 2], "pista": "A la pedrera d'Elies, on picaven la pedra per fer cases."},
-  {"id": "perla_3", "near": "area:Port de Roda de Berà", "offset": [0, 0], "pista": "Al port, entre les barques i els amarradors."},
-  {"id": "perla_4", "near": "landmark:roc_sant_gaieta", "offset": [-2, 2], "pista": "Al Roc de Sant Gaietà, la caseta de pescadors vora el mar."},
-  {"id": "perla_5", "near": "area:Parc de la Silena", "offset": [0, 0], "pista": "Al Parc de la Silena, entre els arbres."},
-  {"id": "perla_6", "near": "landmark:ermita_bera", "offset": [2, 1], "pista": "Dalt de la muntanya, a l'ermita de Berà."},
-  {"id": "perla_7", "near": "landmark:mirador_morella", "offset": [0, 2], "pista": "Al mirador des d'on es veu tot el poble i el mar."}
+  {
+   "id": "perla_1",
+   "near": "area:Escola La Portalada",
+   "offset": [
+    0,
+    2
+   ],
+   "pista": "Busca-la a la Escola La Portalada."
+  },
+  {
+   "id": "perla_2",
+   "near": "area:Llar d'infants Hort de Pau",
+   "offset": [
+    0,
+    2
+   ],
+   "pista": "Busca-la a la Llar d'infants Hort de Pau."
+  },
+  {
+   "id": "perla_3",
+   "near": "area:Parc de la Salut",
+   "offset": [
+    0,
+    2
+   ],
+   "pista": "Busca-la a el Parc de la Salut."
+  },
+  {
+   "id": "perla_4",
+   "near": "area:Plaça Major",
+   "offset": [
+    0,
+    2
+   ],
+   "pista": "Busca-la a la Plaça Major."
+  },
+  {
+   "id": "perla_5",
+   "near": "area:Plaça de Martí Royo",
+   "offset": [
+    0,
+    2
+   ],
+   "pista": "Busca-la a la Plaça de Martí Royo."
+  },
+  {
+   "id": "perla_6",
+   "near": "area:Plaça de Sant Antoni",
+   "offset": [
+    0,
+    2
+   ],
+   "pista": "Busca-la a la Plaça de Sant Antoni."
+  },
+  {
+   "id": "perla_7",
+   "near": "area:Plaça de l'Església",
+   "offset": [
+    0,
+    2
+   ],
+   "pista": "Busca-la a la Plaça de l'Església."
+  }
  ]
 }

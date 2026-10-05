@@ -79,6 +79,18 @@ def article(name):
     return 'el ' + name
 
 
+def perles(areas):
+    """Les Perles del Drac (src/systems/perles.lua) a les places i parcs amb nom d'aquí (fins a 7)."""
+    p = os.path.join(ROOT, 'data/perles.json')
+    doc = load('data/perles.json', {'premi': 'armadura_drac'})
+    names = list(dict.fromkeys(a['n'] for a in areas))[:7]
+    doc['perles'] = [{'id': f'perla_{i + 1}', 'near': 'area:' + n, 'offset': [0, 2],
+                      'pista': f"Busca-la a {article(n)}."} for i, n in enumerate(names)]
+    with open(p, 'w', encoding='utf-8') as f:
+        json.dump(doc, f, ensure_ascii=False, indent=1)
+    print(len(names), 'perles del drac:', ', '.join(names))
+
+
 def main():
     streets = load('data/streets.json', {'lines': [], 'areas': []})
     services = {s['id']: s for s in load('data/services.json', {'services': []})['services']}
@@ -161,6 +173,7 @@ def main():
         if c.get('after') and c['after'] not in [o['id'] for o in out] + ['poble']:
             c.pop('after')
         out.append(c)
+    perles(areas)
     doc = {'_doc': base.get('_doc', ''), 'chapters': out}
     with open(os.path.join(ROOT, 'data/missions.json'), 'w', encoding='utf-8') as f:
         json.dump(doc, f, ensure_ascii=False, indent=1)

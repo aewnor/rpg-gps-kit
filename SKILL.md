@@ -68,6 +68,7 @@ love .              # o el servidor web: python3 tools/web_server.py (port 8102)
 - `make_missions.py` canvia els llocs de Roda dels capítols base pels d'aquí (`subst`), les botigues de
   «compra» pels súpers locals i les portes de cova (`DOORS`). Si afegeixes un capítol a `missions.base.json`,
   fes servir objectius que existeixin a tot arreu (serveis, `home`, `nearest:`), o afegeix-ne el canvi.
+- `make_missions.py` també escriu `data/perles.json`: les 7 Perles del Drac a places i parcs amb nom del lloc.
 - L'editor web (`/editor`, sessió adulta del hub) exporta i importa campanyes en JSON per a un LLM.
 
 ## Accessibilitat (per a nens de 5 anys)

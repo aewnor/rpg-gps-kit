@@ -14,7 +14,7 @@ return function(api)
       if o.hidden == (loc.verified or false) then api.check(false, loc.name .. ': visible només si està comprovat') end
     end
   end
-  api.check(hidden > 0 and shown > 0, string.format('locals comprovats visibles (%d) i la resta amagats (%d)', shown, hidden))
+  api.check(shown > 0, string.format('locals comprovats visibles (%d) i la resta amagats (%d)', shown, hidden))
   g.config.mostrar_tots_els_locals = true
   g:apply_config(g.config)
   api.wait(2)

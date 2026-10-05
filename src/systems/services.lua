@@ -564,7 +564,7 @@ function Services.school(w, n, sv)
     end },
     { 'Parlar', function()
       close(w)
-      say(w, n, { 'Hola, ' .. (st.player_name or 'bonica criatura') .. '! Sóc la mestra de l'escola.',
+      say(w, n, { 'Hola, ' .. (st.player_name or 'bonica criatura') .. '! Sóc la mestra de l\'escola.',
                   'Conèixer el poble és important: on és el CAP, la Policia Local, la biblioteca...' })
     end },
   }, 'Entrar a l\'aula'))
