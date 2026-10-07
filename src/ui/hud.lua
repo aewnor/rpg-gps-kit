@@ -106,13 +106,15 @@ function Hud:draw(state, player, show_stamina, show_mp, equip)
   local low = state.hp > 0 and state.hp <= 2
   for i = 1, hearts do
     local hp = state.hp - (i - 1) * 2
-    local icon = hp >= 1 and self.icons.heart_full or self.icons.heart_empty
     local beat = not require('src.motion').reduced and low and hp >= 1 and hp <= 2 and math.floor(love.timer.getTime() * 4) % 2 == 0
-    love.graphics.draw(icon, x0 + (i - 1) * 9, y + (beat and 3 or 4))
-    if hp == 1 then -- mig cor: la meitat dreta buida
-      love.graphics.setColor(0.7, 0.65, 0.56)
-      love.graphics.rectangle('fill', x0 + (i - 1) * 9 + 4, y + (beat and 4 or 5), 3, 5)
-      love.graphics.setColor(1, 1, 1)
+    local hx, hy = x0 + (i - 1) * 9, y + (beat and 3 or 4)
+    if hp == 1 then -- mig cor: el cor buit i, a sobre, la meitat esquerra del ple (abans un rectangle gris)
+      local full = self.icons.heart_full
+      self.half_quad = self.half_quad or love.graphics.newQuad(0, 0, math.floor(full:getWidth() / 2), full:getHeight(), full:getDimensions())
+      love.graphics.draw(self.icons.heart_empty, hx, hy)
+      love.graphics.draw(full, self.half_quad, hx, hy)
+    else
+      love.graphics.draw(hp >= 2 and self.icons.heart_full or self.icons.heart_empty, hx, hy)
     end
   end
   love.graphics.setColor(0.96, 0.94, 0.89)

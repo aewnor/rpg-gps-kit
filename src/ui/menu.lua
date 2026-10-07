@@ -411,6 +411,30 @@ local function panel(x, y, w, h)
   love.graphics.setColor(1, 1, 1)
 end
 
+-- text que no cap a l'amplada: l'opció triada es desplaça (marquesina) i les altres s'escurcen amb «…»
+-- (abans sortien del recuadre, sobretot en majúscules)
+local function fit_print(font, text, x, y, maxw, moving)
+  local tw = font:getWidth(text)
+  if tw <= maxw then love.graphics.print(text, x, y); return end
+  if moving and not require('src.motion').reduced then
+    local off = (love.timer.getTime() * 24) % (tw + 30)
+    love.graphics.push('all')
+    love.graphics.intersectScissor(x, y - 2, maxw, 20)
+    love.graphics.print(text, x - off, y)
+    love.graphics.print(text, x - off + tw + 30, y)
+    love.graphics.pop()
+    return
+  end
+  local cut = text
+  while #cut > 1 and font:getWidth(cut .. '…') > maxw do
+    cut = cut:sub(1, -2)
+    while #cut > 0 and cut:byte(-1) >= 128 and cut:byte(-1) < 192 do cut = cut:sub(1, -2) end   -- (UTF-8)
+    if #cut > 0 and cut:byte(-1) >= 192 then cut = cut:sub(1, -2) end
+  end
+  love.graphics.print(cut .. '…', x, y)
+end
+Menu.fit_print = fit_print
+
 function Menu:draw()
   local g = self.game
   if self.screen == 'title' then
@@ -431,7 +455,11 @@ function Menu:draw()
     local items = self:items()
     local x, y, w = self.screen == 'title' and 24 or 90, self.screen == 'title' and 92 or 6, 190
     local rh = 20
-    if self.screen == 'pause' then w = 200; x = 60; rh = 18 end   -- el menú de pausa té moltes opcions
+    if self.screen == 'pause' then   -- el menú de pausa té moltes opcions: tan ample com calgui (fins a 300)
+      w = 200
+      for _, it in ipairs(items) do w = math.max(w, g.font:getWidth(it[1]) + 24) end
+      w = math.min(300, w); x = math.floor(160 - w / 2); rh = 18
+    end
     if self.screen == 'title' then rh = 19; y = 84 end
     panel(x, y, w, #items * rh + 12)
     for i, it in ipairs(items) do
@@ -440,7 +468,7 @@ function Menu:draw()
         love.graphics.rectangle('fill', x + 4, y + 4 + (i - 1) * rh, w - 8, rh - 1)
         love.graphics.setColor(1, 1, 1)
       end
-      love.graphics.print(it[1], x + 12, y + 5 + (i - 1) * rh)
+      fit_print(g.font, it[1], x + 12, y + 5 + (i - 1) * rh, w - 20, i == self.sel)
     end
     if self.screen == 'title' then
       love.graphics.setColor(0.12, 0.10, 0.14)
@@ -459,7 +487,7 @@ function Menu:draw()
     panel(30, 20, 260, rows * 20 + 34)
     love.graphics.setScissor(34, 20, 252, rows * 20 + 34)   -- ningún texto sale del panel
     love.graphics.setColor(0.9, 0.74, 0.42)
-    love.graphics.print(self.title or '', 42, 26)
+    fit_print(g.font, self.title or '', 42, 26, 236, true)
     love.graphics.setColor(1, 1, 1)
     for i = top, top + rows - 1 do
       local y = 46 + (i - top) * 20
@@ -470,7 +498,7 @@ function Menu:draw()
       end
       local icon=items[i].sprite and g:special_sprite(items[i].sprite)
       if icon then love.graphics.draw(icon,39,y-1) end
-      love.graphics.print(items[i][1], icon and 59 or 44, y)
+      fit_print(g.font, items[i][1], icon and 59 or 44, y, icon and 222 or 236, i == self.sel)
     end
     love.graphics.setScissor()
     if top > 1 then love.graphics.print('^', 274, 44) end
@@ -487,7 +515,7 @@ function Menu:draw()
       love.graphics.setColor(got and { 0.84, 0.42, 0.29 } or { 0.5, 0.48, 0.45 })
       love.graphics.rectangle(got and 'fill' or 'line', 28, y + 2, 12, 12)
       love.graphics.setColor(1, 1, 1)
-      love.graphics.print(label, 48, y)
+      fit_print(g.font, label, 48, y, 250)
     end
     if not st.flags.has_notebook then
       love.graphics.setColor(0.8, 0.78, 0.7)
@@ -506,7 +534,7 @@ function Menu:draw()
       'C / Maj.: protegir-se (escut)', 'V: encanteri · Q / E: canviar-lo', 'B: bici · H: clàxon',
       'M / Tab: mapa · J: diari de missions', 'Esc / P: menú', 'Comandament: creu, A, X, LB, Y', 'Mapa © OpenStreetMap',
     }
-    for i, l in ipairs(lines) do love.graphics.print(l, 28, 26 + (i - 1) * 18) end
+    for i, l in ipairs(lines) do fit_print(g.font, l, 28, 26 + (i - 1) * 18, 268) end
   end
 end
 
@@ -528,21 +556,22 @@ function Menu:draw_character()
     string.format('Màgia  %d   MP %d/%d', s.magic, st.mp or 0, st.max_mp or 0),
     string.format('Monedes %d   Gemmes %d', st.coins, st.gems or 0),
   }
-  for i, l in ipairs(lines) do love.graphics.print(l, 28, 44 + (i - 1) * 15) end
-  -- entrenament del Gimnàs: força, agilitat i resistència (0..10)
+  -- entrenament del Gimnàs: força, agilitat i resistència (0..10), a la dreta en una línia pròpia
   local tr = st.train or {}
+  for i, l in ipairs(lines) do fit_print(g.font, l, 28, 44 + (i - 1) * 15, 264) end
   love.graphics.setColor(0.70, 0.66, 0.60)
-  love.graphics.print(string.format('Entren. F%d A%d R%d', tr.strength or 0, tr.agility or 0, tr.resistance or 0), 150, 44)
+  fit_print(g.font, string.format('Força %d · Agilitat %d · Resist. %d', tr.strength or 0, tr.agility or 0, tr.resistance or 0), 28, 44 + #lines * 15, 264)
   love.graphics.setColor(1, 1, 1)
   for i, slot in ipairs(Rpg.SLOTS) do
     local d = g.items[st.equipment[slot] or '']
     love.graphics.setColor(0.7, 0.66, 0.6)
-    love.graphics.print(Rpg.SLOT_NAME[slot], 28, 122 + (i - 1) * 16)
+    local ny = 138 + (i - 1) * 13
+    fit_print(g.font, Rpg.SLOT_NAME[slot], 28, ny, 108)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.print(d and d.name or '—', 118, 122 + (i - 1) * 16)
+    fit_print(g.font, d and d.name or '—', 140, ny, 152)
   end
   love.graphics.setColor(0.8, 0.78, 0.7)
-  love.graphics.print('Z: equip, màgia, inventari i vehicles', 28, 204)
+  fit_print(g.font, 'Z: equip, màgia, inventari i vehicles', 28, 206, 264, true)
   love.graphics.setColor(1, 1, 1)
 end
 

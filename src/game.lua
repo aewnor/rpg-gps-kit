@@ -882,6 +882,24 @@ function Game:focus(f)
   if not f and self.scene and not self.menu and not self.minigame and not self.dev then self:open_menu() end
 end
 
+-- trossos del mapa molt detallat (tools/make_minimap.py, minimap_hd2_<fila>_<columna>.jpg): es carreguen la
+-- primera vegada que es veuen; nil si no n'hi ha
+function Game:minimap_hd2()
+  if not love.filesystem.getInfo('assets/runtime/minimap_hd2_0_0.jpg') then return nil end
+  self.sprites.minimap_hd2 = self.sprites.minimap_hd2 or {}
+  local cache = self.sprites.minimap_hd2
+  return function(r, c)
+    local k = r .. '_' .. c
+    if cache[k] == nil then
+      local p = 'assets/runtime/minimap_hd2_' .. k .. '.jpg'
+      local ok, im = pcall(img, p)
+      cache[k] = ok and im or false
+      if cache[k] then cache[k]:setFilter('linear', 'nearest') end
+    end
+    return cache[k] or nil
+  end
+end
+
 -- view: estado de zoom (src/ui/mapzoom.lua); sin él se dibuja el mapa entero
 function Game:draw_minimap(view)
   local Z = require('src.ui.mapzoom')
@@ -904,7 +922,22 @@ function Game:draw_minimap(view)
     end
     pic = self.sprites.minimap_hd or mm
   end
-  love.graphics.draw(pic, x0, y0, 0, S / pic:getWidth(), S / pic:getHeight())
+  local tiles2 = Z.STEPS[view.i] >= 6 and self:minimap_hd2()
+  if tiles2 then   -- molt de prop: els 4 trossos a 2 px per casella, només els que es veuen
+    local half = S / 2
+    for r = 0, 1 do
+      for c = 0, 1 do
+        local tx, ty = x0 + c * half, y0 + r * half
+        if tx < 320 and ty < 240 and tx + half > 0 and ty + half > 0 then
+          local im = tiles2(r, c)
+          if im then love.graphics.draw(im, tx, ty, 0, half / im:getWidth(), half / im:getHeight())
+          else love.graphics.draw(pic, x0, y0, 0, S / pic:getWidth(), S / pic:getHeight()) end
+        end
+      end
+    end
+  else
+    love.graphics.draw(pic, x0, y0, 0, S / pic:getWidth(), S / pic:getHeight())
+  end
   local map = self:get_map('overworld')
   local k = S / (map.width * 16)
   local function at(px, py) return x0 + px * k, y0 + py * k end

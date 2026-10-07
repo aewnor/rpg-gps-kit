@@ -41,6 +41,17 @@ def main():
     path = os.path.join(ROOT, 'assets/runtime/minimap_hd.jpg')
     hd.save(path, quality=84, optimize=True)
     print('minimap_hd ok', hd.size, os.path.getsize(path) // 1024, 'KB')
+    # zoom molt de prop (2026-10-05, «augmenta la resolució del mapa»): 2 px per casella en 2 × 2 trossos de com a
+    # molt 1600 px (textures <= 2048 als mòbils); el joc carrega només els que es veuen
+    hd2 = ov.render(2, min_classes={'MOTORWAY', 'ROAD_MAIN', 'ROAD', 'PEDESTRIAN', 'RAIL', 'RAIL_HS'}, scale_w=False).convert('RGB')
+    hw, hh = hd2.width // 2, hd2.height // 2
+    for r in range(2):
+        for c in range(2):
+            part = hd2.crop((c * hw, r * hh, (c + 1) * hw, (r + 1) * hh))
+            if part.width > HD:
+                part = part.resize((HD, HD * part.height // part.width), Image.LANCZOS)
+            part.save(os.path.join(ROOT, f'assets/runtime/minimap_hd2_{r}_{c}.jpg'), quality=82, optimize=True)
+    print('minimap_hd2 ok', hd2.size)
 
 
 if __name__ == '__main__':

@@ -862,7 +862,8 @@ def special_signs(m):
     creu verda, Ajuntament amb escut i bandera, súpers amb el seu rètol i carros, Correus amb bústia groga).
     Objectes 'signboard' (el joc els dibuixa i els anima) i 'prop' (sòlids al mapa de col·lisions)."""
     st = {'signs': 0, 'props': 0}
-    SIGN = {'police': 'sign_police', 'doctor': 'sign_cap', 'post': 'sign_correus', 'townhall': 'sign_ajuntament'}
+    SIGN = {'police': 'sign_police', 'doctor': 'sign_cap', 'post': 'sign_correus', 'townhall': 'sign_ajuntament',
+            'casino': 'sign_casino'}
     landmarks = [o for o in m.objects if o['type'] == 'landmark']
     def props_of(o):
         return {q['name']: q['value'] for q in o.get('properties', [])}

@@ -476,13 +476,32 @@ def diag(s, size, flip):
 def train_h(kind, loco):
     s = Sprite(48, 16)
     body, stripe = {'rodalies': ('white', 'red'), 'hs': ('white', 'blue'), 'freight': ('ochre2', 'ochre3')}[kind]
-    s.rect(1, 3, 46, 10, body); s.hline(1, 46, 10, stripe); s.hline(1, 46, 11, stripe)
-    s.hline(1, 46, 2, 'ink'); s.hline(1, 46, 13, 'ink'); s.vline(0, 3, 12, 'ink'); s.vline(47, 3, 12, 'ink')
-    for x in range(5, 44, 7):
-        s.rect(x, 5, 4, 3, 'sea3'); s.px(x, 5, 'sea')
+    # Bogies, enganches y caja: silueta compacta vista desde arriba y de tres cuartos.
+    s.rect(7, 1, 5, 14, 'ink'); s.rect(35, 1, 5, 14, 'ink')
+    s.rect(0, 7, 48, 2, 'asph3')
+    s.rect(2, 2, 44, 12, 'ink')
+    s.rect(3, 3, 42, 10, body)
+    s.hline(4, 43, 3, 'white2'); s.hline(3, 44, 12, 'asph3')
+    s.hline(3, 44, 10, stripe); s.hline(3, 44, 11, stripe)
+    s.hline(4, 43, 4, stripe)
+    if kind == 'freight' and not loco:
+        s.rect(5, 4, 38, 7, 'ochre2')
+        for x in range(6, 43, 5):
+            s.vline(x, 4, 10, 'ochre3'); s.vline(x + 1, 4, 9, 'sand')
+    else:
+        for x in range(7, 36 if loco else 43, 7):
+            s.rect(x, 5, 5, 3, 'ink'); s.rect(x, 5, 4, 2, 'sea3'); s.px(x, 5, 'sea')
+        # Puertas y equipos del techo, sin ruido de detalle a escala de juego.
+        for x in (4, 32):
+            s.vline(x, 5, 9, 'white3')
+        s.rect(15, 3, 12, 2, 'white3'); s.hline(16, 25, 3, 'white2')
     if loco:
-        s.rect(40, 4, 6, 5, 'sea3'); s.vline(46, 4, 9, 'ochre')
-    s.rect(4, 13, 6, 2, 'asph3'); s.rect(38, 13, 6, 2, 'asph3')
+        # Cabina afilada en alta velocidad; morro corto en Rodalies.
+        nose = 39 if kind == 'hs' else 42
+        s.rect(nose, 3, 5, 2, body)
+        s.rect(nose, 5, 3, 5, 'ink'); s.vline(nose, 5, 8, 'sea3')
+        s.rect(45, 4, 2, 8, 'ink'); s.vline(45, 5, 10, body)
+        s.px(44, 4, 'ochre'); s.px(44, 11, 'ochre')
     return s
 
 
@@ -1200,6 +1219,7 @@ save(board('CAP', 'white', 'pine3', 'ink'), 'sign_cap')
 save(board('ESCOLA', 'ochre', 'terra3', 'ink', icon=_bell), 'sign_escola')
 save(board('AJUNTAMENT', 'white', 'terra3', 'ink'), 'sign_ajuntament')
 save(board('CORREUS', 'ochre', 'blue', 'ink', icon=_horn), 'sign_correus')
+save(board('CASINO', 'terra3', 'sun', 'ink'), 'sign_casino')   # casino del poble (services.json kind «casino»)
 for _id, _txt, _bg, _fg in (('bonpreu', 'BONPREU', 'terra', 'white'), ('lidl', 'LIDL', 'blue', 'ochre'),
                             ('lidl_platja', 'LIDL', 'blue', 'ochre'), ('mercadona', 'MERCADONA', 'pine2', 'white'),
                             ('spar', 'SPAR', 'red', 'white'), ('aldi', 'ALDI', mix('blue', 'ink', .3), 'ochre'),

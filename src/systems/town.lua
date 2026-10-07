@@ -508,6 +508,9 @@ function Town.update(w, dt)
       T.cat = m.cat
       T.text = s.text
       T.step_type, T.radius = s.type, s.radius
+      -- amic objectiu de la missió («Parla amb el Nil»): mentre dura, no canvia de lloc (abans anava i venia de
+      -- casa al carrer i la fletxa i el personatge saltaven)
+      T.friend_lock = s.target and s.target:match('^friend:(.+)$') or nil
       T.inside = s.inside
       -- parlar amb un servei tancat (de nit, o l'escola el cap de setmana): avís i hora d'obrir
       local sid = (s.type == 'talk' or s.type == 'deliver' or s.type == 'event') and s.target
@@ -587,6 +590,14 @@ function Town.update_routine(w, n, dt)
   if n.props.friend and st.companion and st.companion.id == n.props.friend then   -- és amb tu, d'aventura
     n.hidden = true
     r.place, r.goal, r.path = nil, nil, nil
+    return
+  end
+  if n.props.friend and w.town and w.town.friend_lock == n.props.friend and r.place then
+    r.tick = 1                 -- missió activa amb aquest amic: es queda on és fins que hi parles
+    if r.goal and not n.hidden then
+      local dx, dy = r.goal[1] - n.body.x, r.goal[2] - n.body.y
+      if dx * dx + dy * dy > 4 then return end
+    end
     return
   end
   r.tick = (r.tick or 0) - dt

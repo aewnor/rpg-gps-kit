@@ -11,7 +11,7 @@
 local Rpg = {}
 
 Rpg.SLOTS = { 'weapon', 'shield', 'clothes', 'armor', 'helmet' }
-Rpg.SLOT_NAME = { weapon = 'Arma', shield = 'Mà esquerra (escut o bastó)', clothes = 'Roba', armor = 'Armadura', helmet = 'Casc' }
+Rpg.SLOT_NAME = { weapon = 'Arma', shield = 'Mà esquerra', clothes = 'Roba', armor = 'Armadura', helmet = 'Casc' }
 Rpg.BASE = { attack = 10, defense = 5, magic = 5, mp = 10 }
 Rpg.PER_LEVEL = { attack = 3, defense = 2, hp = 2, magic = 2, mp = 3 }
 Rpg.MAX_MP = 40

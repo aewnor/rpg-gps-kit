@@ -175,7 +175,8 @@ function Trains:blockers(out)
   end
 end
 
--- vagones a dibujar: {x, y, orient, reverse, kind, loco, level}
+-- Vagones rígidos apoyados en dos bogies: el giro anticipa y suaviza cada vértice.
+-- La geometría se deriva de la ruta, sin estado temporal ni saltos al entrar en cámara.
 function Trains:cars(cam)
   local out = {}
   for _, tr in ipairs(self.current or {}) do
@@ -184,10 +185,17 @@ function Trains:cars(cam)
       local s = tr.head - tr.dir * (i * (CAR_LEN + GAP) + CAR_LEN / 2)
       if s >= 0 and s <= l.route.length then
         local x, y, ang, level = l.route:at(s)
+        local ax, ay = l.route:at(s - 16)
+        local bx, by = l.route:at(s + 16)
+        -- En los extremos la ruta recorta las muestras; conservar el centro original.
+        if s >= 16 and s <= l.route.length - 16 then
+          x, y = (ax + bx) / 2, (ay + by) / 2
+        end
+        if ax ~= bx or ay ~= by then ang = math.atan2(by - ay, bx - ax) end
         if tr.dir < 0 then ang = ang + math.pi end
         if cam:visible(x - 24, y - 24, 48, 48, 32) then
           local o, rev = Route.orient(ang)
-          out[#out + 1] = { x = x, y = y, orient = o, reverse = rev, kind = l.consist.kind,
+          out[#out + 1] = { x = x, y = y, angle = ang, orient = o, reverse = rev, kind = l.consist.kind,
                             loco = (i == 0), level = level, back = (i == l.consist.cars - 1) }
         end
       end

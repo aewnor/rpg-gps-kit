@@ -1,6 +1,6 @@
 -- Zoom de los mapas de pantalla (mapa M, diario, selector de casa): pasos, centro, botones + / − y proyección.
 -- view = { i = índice de paso, fx, fy = centro como fracción del mapa (0..1) }
-local Z = { STEPS = { 1, 1.5, 2, 3, 4 } }
+local Z = { STEPS = { 1, 1.5, 2, 3, 4, 6, 8 } }   -- (6 i 8: el mapa detallat en 4 trossos, minimap_hd2_*)
 
 function Z.new(fx, fy) return { i = 1, fx = fx or 0.5, fy = fy or 0.5 } end
 function Z.zoom(view) return Z.STEPS[view.i] end

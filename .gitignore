@@ -34,3 +34,4 @@ casa_privada*.json
 # generats per make maps al kit
 maps/source/*.tmj
 maps/source/*-report.json
+assets/runtime/minimap_hd2_*.jpg

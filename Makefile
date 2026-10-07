@@ -22,6 +22,7 @@ validate:
 	cd tools && $(PY) validate_content.py && $(PY) palette_check.py
 
 unit:
+	luajit tests/trains_cases.lua
 	luajit tests/radio_cases.lua
 	luajit tests/casino_cultural_cases.lua
 	$(PY) tests/nature_cases.py

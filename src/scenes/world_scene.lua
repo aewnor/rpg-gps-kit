@@ -675,6 +675,16 @@ function World:update_horse()
   self.horse_prop = nil
 end
 
+-- objectes de decoració que es poden mirar: { què veus, si hi ha premi, si no n'hi ha }
+local PROP_LOOK = {
+  barrel = { 'Un barril de fusta ben gros.', 'Al fons del barril brilla alguna cosa...', 'Només fa olor de raïm.' },
+  crate = { 'Una caixa de fusta amb fruita.', 'Sota les pomes hi havia monedes!', 'Hi ha pomes i peres. Mmm!' },
+  flowers = { 'Unes flors de colors.', 'Entre les flors hi ha monedes!', 'Fan una olor boníssima.' },
+  amphora = { 'Una àmfora antiga, com les dels romans.', 'A dins hi ha monedes antigues!', 'És buida... només hi ressona la teva veu: hola-a-a!' },
+  lantern = { 'Un fanal de ferro.', 'Al costat del fanal hi ha monedes!', 'De nit fa una llum molt bonica.' },
+  mushrooms = { 'Uns bolets. Millor no menjar-los!', 'Amagades entre els bolets hi ha monedes!', 'Els bolets no es mengen si no saps quins són.' },
+}
+
 function World:interact()
   local fx, fy = self:front_point()
   local near = function(x, y, r) return (x - fx) ^ 2 + (y - fy) ^ 2 < r * r end
@@ -718,6 +728,34 @@ function World:interact()
         self:mount_horse(o)
         return true
       end
+    end
+  end
+  -- objectes de decoració al costat dels serveis (barril, caixa, àmfora...): es poden mirar i, un cop al dia,
+  -- amaguen una moneda o una sorpresa (abans no feien res i semblava que s'hi podia interactuar)
+  for _, o in ipairs(self.props) do
+    local spr = o.props.sprite or ''
+    local kind = spr:match('^prop_(%a+)$')
+    if kind and PROP_LOOK[kind] and not o.hidden and near(o.x, o.y - 4, 14) then
+      local st = self.state
+      st.prop_found = st.prop_found or {}
+      local key = math.floor(o.x / 16) .. ',' .. math.floor(o.y / 16)
+      local look = PROP_LOOK[kind]
+      if st.prop_found[key] == (st.day or 1) then
+        self.dialogue:show(nil, { look[1], 'Avui ja hi has mirat. Torna demà!' })
+      else
+        st.prop_found[key] = st.day or 1
+        local seed = (math.floor(o.x) * 7 + math.floor(o.y) * 13 + (st.day or 1)) % 3
+        if seed == 0 then
+          self:reward(2, 3, look[2])
+          self.dialogue:show(nil, { look[1], look[2] .. ' Tres monedes!' })
+        elseif seed == 1 then
+          self:reward(1, 1, 'Una moneda')
+          self.dialogue:show(nil, { look[1], 'Hi ha una moneda petita!' })
+        else
+          self.dialogue:show(nil, { look[1], look[3] })
+        end
+      end
+      return true
     end
   end
   for _, s in ipairs(self.signs) do
@@ -1607,14 +1645,26 @@ end
 local TRAIN_ROW = { rodalies = 0, hs = 2, freight = 4 }
 local function draw_train_car(game, c, ox, oy)
   local s = game.sprites
-  local idx = TRAIN_ROW[c.kind] + (c.loco and 0 or 1) + 1
-  local img, q, w, h
-  if c.orient == 'h' then img, q, w, h = s.train_h, s.train_hq[idx], 48, 16
-  elseif c.orient == 'v' then img, q, w, h = s.train_v, s.train_vq[idx], 16, 48
-  else img, q, w, h = s.train_d, s.train_dq[(c.orient == 'd2' and 6 or 0) + idx], 40, 40 end
-  local sx, sy = 1, 1
-  if c.reverse then if c.orient == 'h' then sx = -1 elseif c.orient == 'v' then sy = -1 else sx, sy = -1, -1 end end
-  love.graphics.draw(img, q, math.floor(c.x - ox + 0.5), math.floor(c.y - oy + 0.5), 0, sx, sy, w / 2, h / 2 + 2)
+  local cab = c.loco or (c.back and c.kind ~= 'freight')
+  local idx = TRAIN_ROW[c.kind] + (cab and 0 or 1) + 1
+  local angle = c.angle + ((c.back and cab and not c.loco) and math.pi or 0)
+  -- Un único sprite, rotado alrededor del centro de la vía (sin cuantizar posición).
+  love.graphics.setColor(0, 0, 0, 0.22)
+  love.graphics.draw(s.train_h, s.train_hq[idx], c.x - ox + 1, c.y - oy + 2,
+    angle, 1, 1, 24, 8)
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.draw(s.train_h, s.train_hq[idx], c.x - ox, c.y - oy - 2,
+    angle, 1, 1, 24, 8)
+  if cab then
+    local dx, dy = math.cos(angle), math.sin(angle)
+    if c.loco then love.graphics.setColor(1, 0.94, 0.65, 1)
+    else love.graphics.setColor(0.95, 0.22, 0.20, 1) end
+    for _, side in ipairs({-1, 1}) do
+      love.graphics.circle('fill', c.x - ox + dx * 21 - dy * side * 4,
+        c.y - oy - 2 + dy * 21 + dx * side * 4, 0.8)
+    end
+    love.graphics.setColor(1, 1, 1, 1)
+  end
 end
 
 function World:draw()
