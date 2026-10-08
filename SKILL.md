@@ -1,6 +1,6 @@
 ---
 name: rpg-gps-kit
-description: Crear un joc RPG 2D (LÖVE 11.5 + love.js) d'un poble real a partir d'unes coordenades GPS amb el kit rpg-gps-kit — mapa d'OpenStreetMap, gràfics pixel art i música generats per codi, serveis i missions del lloc. Fes-lo servir quan demanin «un joc del meu poble», «el joc de Roda però a <lloc>» o retocar mapes, missions o serveis d'un joc fet amb el kit.
+description: Crear un joc RPG 2D (LÖVE 11.5 + love.js) d'un poble real a partir d'unes coordenades GPS amb el kit rpg-gps-kit — mapa d'OpenStreetMap, gràfics pixel art i música generats per codi, serveis i missions del lloc. Fes-lo servir quan demanin «un joc del meu poble», «el joc de Roda però en un altre poble» o mantenir i validar mapes, missions, interiors, controls o publicacions web de Roda RPG i jocs derivats del kit.
 ---
 
 # RPG GPS Kit — joc nou des d'una ubicació GPS
@@ -10,12 +10,18 @@ els tiles i sprites (`tools/make_tiles.py`, `tools/make_sprites.py`, paleta de 3
 la música i els efectes (sintetitzats a `src/audio.lua` en arrencar), els interiors (`src/world/procgen.lua`)
 i les missions. No cal cap fitxer d'art ni d'àudio extern.
 
+## Kit i joc derivat
+
+Repositori: [aewnor/rpg-gps-kit](https://github.com/aewnor/rpg-gps-kit). Per crear un poble nou, parteix del kit; per modificar un joc existent, treballa al seu repositori. Comprova `git status` i la revisió abans de copiar canvis: Roda i el kit poden tenir funcionalitats diferents. Conserva les modificacions locals; un canvi publicat pot encara no tenir commit.
+
+Per editar interiors, gràfics, controls mòbils o publicar la web, consulta [references/maintenance.md](references/maintenance.md). Distingeix les invariants del motor dels exemples específics de Roda. Actualitzar aquesta guia no incorpora automàticament codi al kit.
+
 ## Flux de treball
 
 ```sh
 cp -r rpg-gps-kit ~/joc-<lloc> && cd ~/joc-<lloc>
 python3 tools/new_location.py --name "<Lloc>" --lat <lat> --lon <lon> [--size-km 3.2]
-make newmaps        # make_streets → make_services → make_missions → make maps (1-3 min en una Pi 5)
+make newmaps        # make_streets → make_services → make_missions → make maps
 make art            # make_locals (rètols de l'OSM) → make_tiles → make_sprites
 make validate       # validate_content.py + palette_check.py: ha de dir «VALIDACIÓ OK»
 make unit           # mira el codi de sortida, no el text (alguns tests imprimeixen OK i després peten)
@@ -25,7 +31,8 @@ love .              # o el servidor web: python3 tools/web_server.py (port 8102)
 - `--size-km`: 3,2 km (800×800 caselles) va bé per a un poble; 6,4 km és el mapa de Roda. Més gran → més
   temps de `make maps` i més memòria al navegador. El costat sempre és múltiple de 32 (el tros del motor).
 - `new_location.py` canvia `t.identity` de `conf.lua` a `rpg-<slug>`: cada joc té la seva carpeta de partides
-  (`~/.local/share/love/rpg-<slug>`). El servidor web la llegeix de `conf.lua`.
+  (`~/.local/share/love/rpg-<slug>`). El servidor web la llegeix de `conf.lua`. Executa aquest generador només en una còpia destinada al poble nou.
+- Les proves de flux han d'usar un `XDG_DATA_HOME` temporal per no tocar partides reals. `make validate` escriu informes a `maps/source`: una còpia amb aquest directori enllaçat al projecte original no està aïllada.
 - Proves de flux: `SDL_VIDEODRIVER=offscreen love . --test=tests/<x>_flow.lua --mute` (les de família amb
   `--keephome`). Les de `tests/roda/` només serveixen per al mapa original de Roda.
 
