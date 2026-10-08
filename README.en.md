@@ -2,7 +2,7 @@
 
 **English** · [Català / original engine documentation](README.md) · [Agent skill](SKILL.md)
 
-[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-PayPal-0070BA?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/serfigavilan)
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-PayPal-0070BA?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/sergigavilan)
 
 Turn **GPS coordinates** into a top-down adventure: Pokémon Red/Blue-style exploration with Zelda-style combat.
 Streets, squares, buildings, shops, schools, beaches and paths come from OpenStreetMap. Pixel art, music,
@@ -100,7 +100,7 @@ Example request:
 
 ## Support
 
-If the kit is useful to you, you can [buy me a coffee through PayPal](https://paypal.me/serfigavilan). ☕
+If the kit is useful to you, you can [buy me a coffee through PayPal](https://paypal.me/sergigavilan). ☕
 
 ## License and credits
 
