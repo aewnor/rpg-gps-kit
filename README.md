@@ -1,5 +1,7 @@
 # RPG GPS Kit — una aventura 2D de qualsevol poble
 
+**Català** · [English — guide and screenshots](README.en.md) · [Skill en català](SKILL.ca.md)
+
 [![Convida'm a un cafè](https://img.shields.io/badge/Convida'm%20a%20un%20caf%C3%A8-PayPal-0070BA?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/serfigavilan)
 
 Kit per crear un joc d'aventura cenital (exploració a l'estil Pokémon Vermell/Blau, combat a l'estil Zelda) **a
@@ -9,6 +11,14 @@ per codi: no cal cap recurs extern. Pensat per a nens i nenes (des de 5 anys): t
 amb ressaltat de paraules, mode de lletra majúscula i missions per conèixer el propi poble.
 
 Va néixer com un joc de Roda de Berà (Tarragonès). El kit inclou aquest motor amb un exemple d'Altafulla.
+
+## Captures de pantalla
+
+Captures reals de **Roda RPG**, el joc original. Mostren l'estil del motor; els escenaris i les funcions específiques de Roda poden diferir del kit i d'un poble acabat de generar.
+
+![Exploració al costat de la piscina pública de Roda](docs/screenshots/town-exploration.png)
+
+[Veure la galeria amb botigues i ferrocarril →](README.en.md#screenshots)
 
 ## Crear el joc d'un lloc nou
 

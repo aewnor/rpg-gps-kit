@@ -1,36 +1,38 @@
-# Manteniment de jocs RPG GPS
+# Maintaining RPG GPS games
 
-Llegeix només les seccions relacionades amb la feina. Les rutes són relatives al repositori del joc que s'està editant.
+[ Català ](maintenance.ca.md)
 
-## Interiors, mobles i partides existents
+Read only the sections relevant to the task. Paths are relative to the repository of the game being edited.
 
-- `src/world/procgen.lua` genera interiors i decoració; `src/world/procmap.lua` els converteix en mapa i assigna flags als cofres. Revisa les dues peces quan moguis mobles o afegeixis botí.
-- Comprova spawn, sortida, portes entre plantes, NPC i punts d'interacció. Un cofre visible pot ser inaccessible si no hi ha cap posició legal des d'on mirar-lo. Valida amb la col·lisió i l'abast real del jugador; una aproximació per caselles pot marcar falsos errors a les cantonades.
-- Conserva llavors, ordre de consum del generador aleatori, premis i flags dels cofres existents. Reordenar objectes pot canviar un flag numèric i tornar a donar un premi ja recollit. Fes servir identificadors estables per al contingut nou i conserva la compatibilitat del contingut antic.
-- A Roda s'ha afegit `src/world/interior_access.lua`: comprova si existeix abans de reutilitzar-lo. `snapshot`/`replay` recol·loquen decoració de forma accessible sense regenerar el botí; `legacy_index` conserva flags antics. No assumeixis que el kit ja incorpora aquest mòdul.
-- Si hi són, executa `tests/interior_access_cases.lua` i el flux `tests/interior_access_flow.lua`; prova també sortir, tornar a entrar i continuar una partida desada. Per validar generació procedural, cobreix tipus, llavors i plantes, no només un interior.
+## Interiors, furniture and existing saves
 
-## Controls mòbils i màgia
+- `src/world/procgen.lua` generates interiors and decoration; `src/world/procmap.lua` turns them into maps and assigns chest flags. Review both when moving furniture or adding loot.
+- Check spawn points, exits, doors between floors, NPCs and interaction points. A visible chest can be inaccessible if there is no legal position from which to face it. Validate against actual player collision and interaction range; tile-based approximations can report false failures at corners.
+- Preserve seeds, random-number consumption order, rewards and existing chest flags. Reordering objects can change a numeric flag and grant a previously collected reward again. Use stable identifiers for new content and retain compatibility with old content.
+- Roda has added `src/world/interior_access.lua`: check whether it exists before reusing it. `snapshot`/`replay` relocate decoration to accessible positions without regenerating loot; `legacy_index` preserves old flags. Do not assume this module is already in the kit.
+- When available, run `tests/interior_access_cases.lua` and `tests/interior_access_flow.lua`; also test leaving, re-entering and continuing a saved game. Cover different interior types, seeds and floors when validating procedural generation, rather than just one interior.
 
-- `web/index.html` transforma els botons tàctils en esdeveniments de teclat; `src/input.lua` els assigna a accions. Mantén coherents `data-key`, `data-code` i el mapa JavaScript `CODES` (`v`, `86`, `KeyV` per llançar màgia).
-- `src/scenes/world_scene.lua:cast_spell` conserva l'aprenentatge de `magic_quest`, els requisits de nivell i el manà. `Magic.has_staff` admet el bastó equipat en qualsevol de les dues mans. Un botó que llança màgia no ha d'invocar el canvi d'arma `Rpg.swap`.
-- A la versió de Roda revisada el 2026-10-08, el botó 🪄 substitueix el canvi d'arma tàctil. El kit pot conservar encara el botó R; verifica el fitxer abans de descriure'n el comportament.
-- Diferencia zoom accidental del navegador i petició d'omplir la pantalla. `touch-action:none`, `overscroll-behavior:none` i els gestos de Safari afecten la interacció; no canvien la relació d'aspecte del joc. Limita els manejadors de gestos a joc/controls, sense interceptar formularis.
-- Si canvies l'escala del dibuix, actualitza també la transformació de coordenades de `Game:pointer`. Estirar només el CSS pot desalinear els tocs.
-- Comprova vertical i horitzontal amb `hasTouch`/`isMobile`, pulsació i alliberament de tecles, controls simultanis i formulari de nom. Reduir una finestra d'escriptori no activa necessàriament `(pointer: coarse)`. Identifica l'emulació com a tal: no prova Safari en un dispositiu físic.
+## Mobile controls and magic
 
-## Resolució i rendiment
+- `web/index.html` converts touch buttons into keyboard events; `src/input.lua` maps them to actions. Keep `data-key`, `data-code` and the JavaScript `CODES` map consistent (`v`, `86`, `KeyV` for casting magic).
+- `src/scenes/world_scene.lua:cast_spell` retains `magic_quest` learning, level requirements and mana checks. `Magic.has_staff` accepts a staff equipped in either hand. A spellcasting button must not invoke weapon swapping through `Rpg.swap`.
+- In the Roda version reviewed on 2026-10-08, the 🪄 button replaces the touch weapon-swap button. The kit may still have the R button; inspect the file before describing its behavior.
+- Distinguish accidental browser zoom from a request to fill the screen. `touch-action:none`, `overscroll-behavior:none` and Safari gestures affect interaction, not the game's aspect ratio. Restrict gesture handlers to the game and controls without intercepting forms.
+- If rendering scale changes, update the coordinate transformation in `Game:pointer` too. Stretching CSS alone can misalign touch input.
+- Check portrait and landscape with `hasTouch`/`isMobile`, key press and release, simultaneous controls and the name form. Shrinking a desktop window does not necessarily activate `(pointer: coarse)`. Identify emulation as emulation: it does not test Safari on physical hardware.
 
-- En els derivats que tinguin `src/render_resolution.lua`, les coordenades lògiques i la resolució física dels llenços són diferents. Revisa escalat, origen de sprites, quads mutables i scissor en modificar el render.
-- Roda manté els fons en baixa resolució i personatges/primer pla en alta resolució per reduir el cost. No traslladis totes les capes a alta resolució sense mesurar el rendiment.
-- `--bench=N` indica segons, no fotogrames. Compara les mesures en les mateixes condicions i no extrapolis una prova de render per programari a tots els mòbils.
+## Resolution and performance
 
-## Publicació web
+- In derived games with `src/render_resolution.lua`, logical coordinates differ from the physical canvas resolution. Review scaling, sprite origins, mutable quads and scissor rectangles when changing rendering.
+- Roda keeps backgrounds at low resolution and characters/foreground at high resolution to reduce cost. Measure performance before moving every layer to high resolution.
+- `--bench=N` specifies seconds, not frames. Compare measurements under the same conditions; do not extrapolate software-rendering results to all mobile devices.
 
-1. Verifica el contingut i les proves adequades (`make validate`, `make unit`; comprova els codis de sortida). Per canvis només de documentació, valida la guia i els enllaços, sense regenerar el joc.
-2. `sh tools/build_web.sh` prepara una candidata i imprimeix la ruta `releases/<id>`; sense `--activate` no canvia la web activa. Revisa l'script si el derivat ha canviat aquest contracte.
-3. Prova la candidata amb perfils i emmagatzematge temporals. En un servidor de preview, no connectis les API a les partides de producció. Comprova l'arrencada real del motor, no només que el canvas s'hagi fet visible.
-4. Quan publicar estigui autoritzat, comprova `manifest.json` i que la versió activa no hagi canviat durant la prova. `tools.web_release.activate_release(root, release)` activa una candidata existent canviant atòmicament `build/web`. No cal recompilar-la ni reiniciar el servidor.
-5. Verifica la resposta HTTP i els hashes del HTML i dels recursos servits. JavaScript/WASM utilitzen `/releases/<id>/...`; els chunks del mapa es demanen a `/data/<escena>/<fitxer>`. Conserva la release anterior per poder revertir.
+## Web deployment
 
-Mantén els continguts d'un poble (coordenades, missions locals i dades familiars) separats dels canvis reutilitzables del motor quan traslladis millores al kit.
+1. Validate content and run appropriate tests (`make validate`, `make unit`; check exit codes). For documentation-only changes, validate the guide and links without regenerating the game.
+2. `sh tools/build_web.sh` prepares a candidate and prints its `releases/<id>` path; without `--activate`, it does not change the active website. Inspect the script if a derived game has changed this contract.
+3. Test the candidate with temporary profiles and storage. Do not connect preview-server APIs to production saves. Verify that the engine actually starts, not merely that the canvas becomes visible.
+4. Once deployment is authorized, check `manifest.json` and confirm the active version has not changed during testing. `tools.web_release.activate_release(root, release)` activates an existing candidate by atomically switching `build/web`. Rebuilding or restarting the server is unnecessary.
+5. Verify HTTP responses and hashes of the served HTML and assets. JavaScript/WASM use `/releases/<id>/...`; map chunks are requested from `/data/<scene>/<file>`. Retain the previous release for rollback.
+
+Keep town-specific content (coordinates, local quests and family data) separate from reusable engine changes when porting improvements to the kit.
